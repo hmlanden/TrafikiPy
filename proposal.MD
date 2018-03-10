@@ -22,9 +22,9 @@
 
 ## Features:
 - Basic visualizations
- - map viz
+    - map viz
 - Create a predictive model using Naive Bayes relating weather conditions and likelihood of accident.
- - Predict likelihood of getting into an accident based on weather conditions
+    - Predict likelihood of getting into an accident based on weather conditions
 
 
 # Roadmap (Due Sun. March 18th)
