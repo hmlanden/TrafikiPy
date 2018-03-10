@@ -7,6 +7,7 @@
 - Pandas 
 - Seaborn 
 - Matplotlib
+- geoplotlib
 - Numpy
 - OS
 
