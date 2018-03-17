@@ -1,0 +1,14 @@
+# ignore all logs
+*.log
+
+# ignore checkpoint
+*.ipynb_checkpoints
+
+# mypy
+*.mypy_cache/
+
+# system stuff
+.DS_Store
+
+# ignore Jupiter notebooks
+*.ipynb
