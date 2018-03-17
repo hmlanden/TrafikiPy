@@ -9,3 +9,6 @@
 
 # system stuff
 .DS_Store
+
+# ignore Jupiter notebooks
+*.ipynb
