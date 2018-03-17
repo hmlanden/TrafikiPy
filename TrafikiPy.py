@@ -12,10 +12,6 @@ import requests
 
 pd.set_option('display.max_columns', None)
 
-#============IMPORT==============
-csv_file_path = os.path.join('Resources', 'accidents_2014.csv')
-traffic_df = pd.read_csv(csv_file_path)
-
 #============DROP BLANK COLUMNS===========
 
 traffic_df.dropna(
@@ -91,6 +87,7 @@ traffic_df['Date'] = pd.to_datetime(traffic_df['Date'], format='%d/%m/%y')
 
 # display cleaned file
 traffic_df.head()
+
 
 # ----------------------------------------------------------------------
 # **Part 2: Set up overall formatting**

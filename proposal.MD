@@ -14,6 +14,10 @@
 
 ## Data Cleaning: Charles!
 
+## Statistics
+For all stats questions, we will say results are statistically significant at:
+- 95% Confidence Interval / P-Value < 0.5
+
 ## Questions:
 1. Correlation between weather and severity/casualties? (Pratham)
 2. Correlation between time of day and accidents? (Dolly)
