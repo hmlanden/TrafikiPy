@@ -1,3 +1,4 @@
+
 # ----------------------------------------------------------------------
 # **Part 1: File Set Up**
 # ----------------------------------------------------------------------
@@ -11,6 +12,10 @@ import seaborn as sns
 import requests
 
 pd.set_option('display.max_columns', None)
+
+#============IMPORT==============
+csv_file_path = os.path.join('Resources', 'accidents_2014.csv')
+traffic_df = pd.read_csv(csv_file_path)
 
 #============DROP BLANK COLUMNS===========
 
@@ -88,7 +93,6 @@ traffic_df['Date'] = pd.to_datetime(traffic_df['Date'], format='%d/%m/%y')
 # display cleaned file
 traffic_df.head()
 
-
 # ----------------------------------------------------------------------
 # **Part 2: Set up overall formatting**
 # ----------------------------------------------------------------------
@@ -99,6 +103,7 @@ twelve = sns.palplot(twelveColorPalette)
 # create color palette with 8 colors (for use with weather conditions)
 eightColorPalette = sns.color_palette('hls', 8)
 eight = sns.palplot(eightColorPalette)
+
 plt.savefig('eightColorPalette.png')
 
 # create color palette with 7 colors (for use with day of the week analysis)
@@ -109,11 +114,103 @@ plt.savefig('sevenColorPalette.png')
 # create color palette with 5 colors (for use with road/light conditions)
 fiveColorPalette = sns.color_palette('hls', 5)
 five = sns.palplot(fiveColorPalette)
+
 plt.savefig('fiveColorPalette.png')
 
 # create color palette with 3 colors (for data by severity)
 threeColorPalette = sns.color_palette('hls', 3)
 three = sns.palplot(threeColorPalette)
+
+# display color palettes
+three
+five
+eight
+twelve
+
+urban = traffic_df[traffic_df["Urban or Rural Area"] == 1]
+rural = traffic_df[traffic_df["Urban or Rural Area"] == 2]
+
+rural_mean_1 = rural.groupby(["Date"]).mean()["Accident Severity"]
+rural_mean_2 = rural.groupby(["Date"]).mean()["Number of Casualties"]
+rural_count_3 = rural.groupby(["Date"]).count()["Accident Index"]
+
+urban_mean_1 = urban.groupby(["Date"]).mean()["Accident Severity"]
+urban_mean_2 = urban.groupby(["Date"]).mean()["Number of Casualties"]
+urban_count_3 = urban.groupby(["Date"]).count()["Accident Index"]
+
+plt.rcParams["figure.figsize"] = [16,9]
+
+plt.title("Accident Severity and Average Casualty by City Type", size=20)
+plt.ylabel("Average Severity", size=20)
+plt.xlabel("Average Casualties", size=20)
+
+sns.set()
+plt.scatter(rural_mean_2,
+            rural_mean_1,
+            color="#DACF68",
+            s=rural_count_3,
+            edgecolor="black", linewidths= 0.1,
+            alpha=0.8, label="Rural")
+
+plt.scatter(urban_mean_2,
+            urban_mean_1,
+            color="#8757D4",
+            s=urban_count_3,
+            edgecolor="black", linewidths=0.1, marker="^", 
+            alpha=0.8, label="Urban")
+
+plt.legend(title='City Type', loc='center left', bbox_to_anchor=(1, 0.5), fontsize=15)
+plt.savefig('Severity and Casualty by City Type.png')
+plt.show()
+
+
+'''
+severity_1 = traffic_df[traffic_df["Accident Severity"] == 1]
+severity_2 = traffic_df[traffic_df["Accident Severity"] == 2]
+severity_3 = traffic_df[traffic_df["Accident Severity"] == 3]
+
+severity_1_mean_1 = severity_1.groupby(["Local Authority District"]).mean()["Number of Casualties"]
+severity_1_mean_2 = severity_1.groupby(["Local Authority District"]).sum()["Number of Casualties"]
+severity_1_count_2 = severity_1.groupby(["Local Authority District"]).count()["Accident Index"]
+
+severity_2_mean_1 = severity_2.groupby(["Local Authority District"]).mean()["Number of Casualties"]
+severity_2_mean_2 = severity_2.groupby(["Local Authority District"]).sum()["Number of Casualties"]
+severity_2_count_2 = severity_2.groupby(["Local Authority District"]).count()["Accident Index"]
+
+severity_3_mean_1 = severity_3.groupby(["Local Authority District"]).mean()["Number of Casualties"]
+severity_3_mean_2 = severity_3.groupby(["Local Authority District"]).sum()["Number of Casualties"]
+severity_3_count_2 = severity_3.groupby(["Local Authority District"]).count()["Accident Index"]
+
+sns.set()
+plt.rcParams["figure.figsize"] = [16,9]
+
+plt.ylim([0,500])
+plt.xlim([1,5])
+plt.title("Latitude vs. Max Casualties", size=20)
+plt.ylabel("Number of Casualties in Authority District", size=20)
+plt.xlabel("Average Causalties in Authority District", size=20)
+
+
+plt.scatter(severity_1_mean_1,
+            severity_1_mean_2, 
+            color="#5D56D3", 
+            edgecolor="black", linewidths= 0.1,
+            alpha=0.75, label="Severity 1")
+
+plt.scatter(severity_2_mean_1,
+            severity_2_mean_2,  
+            color="#7CD96E",
+            edgecolor="black", linewidths= 0.1,
+            alpha=0.75, label="Severity 2")
+
+plt.scatter(severity_3_mean_1,
+            severity_3_mean_2,  
+            color="#CC655B", 
+            edgecolor="black", linewidths= 0.1,
+            alpha=0.75, label="Severity 3")
+'''
+
+=======
 plt.savefig('threeColorPalette.png')
 
 # display color palettes
@@ -361,3 +458,4 @@ plt.legend(handles=[sev1, sev2, sev3],
            loc='best', title='Accident Severity')
 plt.savefig('stackedSeverityByMonth.png')
 plt.show()
+
