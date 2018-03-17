@@ -99,18 +99,22 @@ twelve = sns.palplot(twelveColorPalette)
 # create color palette with 8 colors (for use with weather conditions)
 eightColorPalette = sns.color_palette('hls', 8)
 eight = sns.palplot(eightColorPalette)
+plt.savefig('eightColorPalette.png')
 
 # create color palette with 7 colors (for use with day of the week analysis)
 sevenColorPalette = sns.color_palette('hls', 7)
 seven = sns.palplot(sevenColorPalette)
+plt.savefig('sevenColorPalette.png')
 
 # create color palette with 5 colors (for use with road/light conditions)
 fiveColorPalette = sns.color_palette('hls', 5)
 five = sns.palplot(fiveColorPalette)
+plt.savefig('fiveColorPalette.png')
 
 # create color palette with 3 colors (for data by severity)
 threeColorPalette = sns.color_palette('hls', 3)
 three = sns.palplot(threeColorPalette)
+plt.savefig('threeColorPalette.png')
 
 # display color palettes
 plt.show(three)
@@ -265,6 +269,7 @@ plt.bar(trafficDataByMonth_df['Date'],
 plt.title("Normalized Accident Count by Month", size=16)
 plt.xlabel("Month", size=13)
 plt.ylabel("Normalized Accident Count", size=13)
+plt.savefig('normalizedAccidentByMonth.png')
 
 # change date column to month names
 trafficDataByMonth_df['Date'] = month_list
@@ -305,6 +310,7 @@ accidentSeverityByMonth_plt = sns.barplot(x='Month', y='Accident Count',
                                           linewidth=1)
 plt.title("Normalized Accident Severity by Month", size=16)
 plt.ylabel("Normalized Accident Count")
+plt.savefig('normalizedAccidentSeverityByMonth.png')
 plt.show(accidentSeverityByMonth_plt)
 
 # create base dataframe to work with
@@ -353,4 +359,5 @@ sev2 = mpatches.Patch(color='#7CD96E', label='2', alpha=0.75)
 sev3 = mpatches.Patch(color='#5D56D3', label='3', alpha=0.75)
 plt.legend(handles=[sev1, sev2, sev3], 
            loc='best', title='Accident Severity')
+plt.savefig('stackedSeverityByMonth.png')
 plt.show()
