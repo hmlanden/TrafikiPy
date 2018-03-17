@@ -127,6 +127,192 @@ five
 eight
 twelve
 
+
+
+# # Weather and Severity Correlation 
+
+grouper_1 = traffic_df[['Weather Conditions','Accident Severity']]
+weather_severity = grouper_1.groupby(by = 'Weather Conditions',as_index=False).sum()
+plt = sns.barplot(weather_severity['Accident Severity'],weather_severity['Weather Conditions'])
+
+
+# # Severity and Weather Correlation
+
+grouper_a = traffic_df[['Weather Conditions','Accident Severity']]
+weather_severity_1 = grouper_a.groupby(by = 'Accident Severity',as_index=False).count()
+plt1 = sns.barplot(weather_severity_1['Accident Severity'],weather_severity_1['Weather Conditions'])
+
+
+# # Light Condition and Severity Correlation
+
+grouper_2 = traffic_df[['Light Conditions','Accident Severity']]
+light_condition_severity = grouper_2.groupby(by = 'Light Conditions',as_index=False).sum()
+plt = sns.barplot(light_condition_severity['Accident Severity'],light_condition_severity['Light Conditions'])
+
+
+# # Severity Condition and Light Condition
+
+grouper_b = traffic_df[['Light Conditions','Accident Severity']]
+light_condition_severity_1 = grouper_b.groupby(by = 'Accident Severity',as_index=False).count()
+plt = sns.barplot(light_condition_severity_1['Accident Severity'],light_condition_severity_1['Light Conditions'])
+
+
+# # Road Type and Severity Correlation
+
+grouper_3 = traffic_df[['Road Type','Accident Severity']]
+road_type_severity = grouper_3.groupby(by = 'Road Type',as_index=False).sum()
+plt = sns.barplot(road_type_severity['Accident Severity'],road_type_severity['Road Type'])
+
+
+# # Severity and Road Type Correlation
+
+grouper_c = traffic_df[['Road Type','Accident Severity']]
+road_type_severity_1 = grouper_c.groupby(by = 'Accident Severity',as_index=False).count()
+plt = sns.barplot(road_type_severity_1['Accident Severity'],road_type_severity_1['Road Type'])
+
+
+# # Converting Weather Condition to Numbers 
+
+weather_condition_number_list = []
+
+for condition in traffic_df['Weather Conditions']:
+    
+    if (condition == 'Fine without high winds'):
+        weather_condition_number_list.append(7)
+        
+    if (condition == 'Raining without high winds'):
+        weather_condition_number_list.append(6)
+        
+    if (condition == 'Raining with high winds'):
+        weather_condition_number_list.append(5)
+        
+    if (condition == 'Other'):
+        weather_condition_number_list.append(4)
+        
+    if (condition == 'Fine with high winds'):
+        weather_condition_number_list.append(3)
+        
+    if (condition == 'Fog or mist'):
+        weather_condition_number_list.append(2)
+    
+    if (condition == 'Snowing without high winds'):
+        weather_condition_number_list.append(1)
+        
+    if (condition == 'Snowing with high winds'):
+        weather_condition_number_list.append(0)
+
+
+# # Converting Road Type to Numbers
+
+road_type_number_list = []
+
+traffic_df['Road Type'].value_counts()
+
+for road in traffic_df['Road Type']:
+    
+    if (road == 'Single carriageway'):
+        road_type_number_list.append(4)
+    
+    if (road == 'Dual carriageway'):
+        road_type_number_list.append(3)
+        
+    if (road == 'Roundabout'):
+        road_type_number_list.append(2)
+        
+    if (road == 'One way street'):
+        road_type_number_list.append(1)
+        
+    if (road == 'Slip road'):
+        road_type_number_list.append(0)
+
+
+# # Light Conditions to Numbers
+
+light_condition_number_list = []
+
+for condition in traffic_df['Light Conditions']:
+    
+    if (condition == 'Daylight: Street light present'):
+        light_condition_number_list.append(4)
+
+    if (condition == 'Darkness: Street lights present and lit'):
+        light_condition_number_list.append(3)
+        
+    if (condition == 'Darkness: No street lighting'):
+        light_condition_number_list.append(2)
+        
+    if (condition == 'Darkness: Street lighting unknown'):
+        light_condition_number_list.append(1)
+        
+    if (condition == 'Darkness: Street lights present but unlit'):
+        light_condition_number_list.append(0)
+        
+
+
+# In[33]:
+
+
+training_data = pd.DataFrame({'Weather':weather_condition_number_list,
+                              'Road Type':road_type_number_list,
+                              'Light Condition':light_condition_number_list                          
+                              })
+
+
+# # Test Data
+
+# In[34]:
+
+
+import random    
+
+weather_testing = []
+road_testing = []
+light_testing = []
+
+for i in range (54147):    
+    weather_testing.append(random.randrange(0,8,1))  
+    road_testing.append(random.randrange(0,5,1))
+    light_testing.append(random.randrange(0,5,1))  
+  
+     
+
+
+# In[35]:
+
+
+test_data = []
+for i in range(54147):
+    temp=[]
+    temp.append(weather_testing[i])
+    temp.append(road_testing[i])
+    temp.append(light_testing[i])
+    test_data.append(temp)      
+
+
+# # Training Algorithm
+
+# In[36]:
+
+
+X = training_data[['Weather','Road Type','Light Condition']]
+Y = traffic_df['Accident Severity']
+from sklearn.naive_bayes import GaussianNB
+clf = GaussianNB()
+clf.fit(X, Y)
+prediction = clf.predict(test_data)
+
+
+# In[39]:
+
+
+csv_data = pd.DataFrame({'Weather Conditions': weather_condition_number_list, 
+                         'Road Type': road_type_number_list,
+                         'Light Condition': light_condition_number_list,
+                         'Severity': traffic_df['Accident Severity']
+                        })
+csv_data.to_csv('Resources/regression.csv')
+
+
 urban = traffic_df[traffic_df["Urban or Rural Area"] == 1]
 rural = traffic_df[traffic_df["Urban or Rural Area"] == 2]
 
@@ -210,7 +396,7 @@ plt.scatter(severity_3_mean_1,
             alpha=0.75, label="Severity 3")
 '''
 
-=======
+
 plt.savefig('threeColorPalette.png')
 
 # display color palettes
@@ -458,4 +644,3 @@ plt.legend(handles=[sev1, sev2, sev3],
            loc='best', title='Accident Severity')
 plt.savefig('stackedSeverityByMonth.png')
 plt.show()
-
