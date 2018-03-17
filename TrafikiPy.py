@@ -100,6 +100,10 @@ twelve = sns.palplot(twelveColorPalette)
 eightColorPalette = sns.color_palette('hls', 8)
 eight = sns.palplot(eightColorPalette)
 
+# create color palette with 7 colors (for use with day of the week analysis)
+sevenColorPalette = sns.color_palette('hls', 7)
+seven = sns.palplot(sevenColorPalette)
+
 # create color palette with 5 colors (for use with road/light conditions)
 fiveColorPalette = sns.color_palette('hls', 5)
 five = sns.palplot(fiveColorPalette)
