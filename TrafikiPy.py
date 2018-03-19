@@ -507,117 +507,264 @@ plt.savefig('Images/stackedSeverityByMonth.png')
 plt.show()
 
 # ----------------------------------------------------------------------
-# Part 3: Dolly insert explanation here and add comments plez
+# Part 3: TRAFFIC ACCIDENT CASUALTIES BY DAY OF WEEK AND TIME OF DAY
 # ----------------------------------------------------------------------
 
-accidents_by_weeknum = traffic_df.groupby(['Day of Week']).sum()['Number of Casualties'].to_frame().reset_index()
-accidents_by_date = traffic_df.groupby(['Date', 'Day of Week', 'Month']).sum()['Number of Casualties'].to_frame().reset_index()
-accidents_by_hour = traffic_df.groupby(['Day of Week','Hour of Day']).sum()['Number of Casualties'].to_frame().reset_index()
+'''
+## Number of Casualties by Day of Week
+The objective was to determine which day of the week had the most casualties in 2014. We summed the number of casualties
+for each day of the week and found that Friday had the total most number of casualties while Sunday had the
+least number of casualties. For further analysis, we will look at the average number of casualties for each day of the
+week in order to adjust for differences in the number of days for each week day and to see potential outliers in the data. 
+'''
 
+# Create dataframe for Casualties by Day of Week and Hour of Day
+accidents_by_weeknum = traffic_df.groupby(['Day of Week']).sum()['Number of Casualties'].to_frame().reset_index()
+accidents_by_date = traffic_df.groupby(['Date', 
+                                        'Day of Week', 
+                                        'Month']).sum()['Number of Casualties'].to_frame().reset_index()
+accidents_by_hour = traffic_df.groupby(['Day of Week',
+                                        'Hour of Day']).sum()['Number of Casualties'].to_frame().reset_index()
 accidents_by_hour_pivot = accidents_by_hour.pivot_table(values=['Number of Casualties'], 
-                                                  index=['Hour of Day'], columns=['Day of Week'])
+                                                        index=['Hour of Day'], 
+                                                        columns=['Day of Week'])
 accidents_by_hour_pivot.columns = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday']
 
+# Plot bars for Number of Casualties by Day of Week
 plt.figure(figsize=(10,6))
-b = sns.barplot(x='Day of Week', y='Number of Casualties', data=accidents_by_weeknum, palette=sevenColorPalette)
 sns.set_style('darkgrid')
-plt.xticks(np.arange(0,7,1), ('Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'))
-plt.xlabel('')
-plt.ylabel('Number of Casualties')
+b = sns.barplot(x='Day of Week', y='Number of Casualties', data=accidents_by_weeknum,
+                palette=sevenColorPalette, linewidth=1, edgecolor='black')
 
+# Define x_axis for xticks
+x_axis = np.arange(0,7,1)
+
+# Calculate upper bound of y-axis
+y_max = max(accidents_by_weeknum['Number of Casualties'])
+# round the upper bound of y-axis up to nearest thousand
+y_max -= y_max % -1000
+step = 1000
+y_axis = np.arange(2000, y_max+step, step)
+# format y-ticks as comma separated
+y_axis_fmt = ["{:,.0f}".format(y) for y in y_axis]
+# set y-axis limits
+plt.ylim(min(y_axis), max(y_axis))
+
+#plt.tick_params(axis='y', which='major', direction='out', length=2, color='gray')
+plt.xticks(x_axis, ('Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'), fontsize=13)
+plt.yticks(y_axis, y_axis_fmt, fontsize=13)
+plt.xlabel('')
+plt.ylabel('Number of Casualties', fontsize=13)
+
+# Add Data Labels for bar values
 ax = b.axes
 for p in ax.patches:
     ax.annotate(s="{:,.0f}".format(p.get_height()), xy=((p.get_x() + p.get_width() / 2., p.get_height()-500)),
                 ha='center', va='center', color='white', xytext=(0, 2), 
-                textcoords='offset points', weight='bold')  
+                textcoords='offset points', weight='bold', fontsize=13)  
 
-plt.title('2014 Traffic Accidents by Day of Week')
+plt.title('Total Traffic Accidents by Day of Week (in 2014)', fontsize=13)
 plt.savefig('Images/2014-accidents-by-dayofweek.png')
 
-plt.figure(figsize=(10,6))
-sns.boxplot(x='Day of Week', y='Number of Casualties', data=accidents_by_date, palette=sevenColorPalette)
-sns.set_style('darkgrid')
-plt.xlabel('')
-plt.ylabel('Number of Casualties')
-plt.xticks(np.arange(0,7,1),('Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'))
-plt.title('2014 Average Number of Traffic Accidents by Day of Week')
-plt.savefig('Images/2014-avg-accidents-per-dayofweek.png')
+'''
+## Distribution in Number of Casualties in a day for each day of the week
+By looking at the distribution of daily traffic accident casualties for each day of the week, we were able 
+to determine that Friday had the highest median number of Casualties followed by Tuesday with the second 
+highest median. The box-and-whisker plot also allows us to see that outliers ahd a great impact for Wednesday.
+We can see that a few outliers on the higher end in number of casualties contributed to bringing up Wednesday's 
+overall number of casualties for 2014.
+'''
 
-x_axis = accidents_by_hour_pivot.index
+# Plot boxplot showing average number of casualties by day of week
 plt.figure(figsize=(10,6))
-plt.grid(b='on')
+sns.set_style('darkgrid')
+sns.boxplot(x='Day of Week', y='Number of Casualties', data=accidents_by_date, 
+            palette=sevenColorPalette)
+
+# Define x_axis for xticks
+x_axis = np.arange(0,7,1)
+
+# Calculate upper bound of y-axis
+y_max = 700
+step = 100
+y_axis = np.arange(200, y_max+step, step)
+# format y-ticks as comma separated
+y_axis_fmt = ["{:,.0f}".format(y) for y in y_axis]
+
+plt.ylim(min(y_axis), max(y_axis))
+
+#plt.tick_params(axis='y', which='major', direction='out', length=2, color='gray')
+plt.xticks(x_axis, ('Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'), fontsize=13)
+plt.yticks(y_axis, y_axis_fmt, fontsize=13)
+
+plt.xlabel('')
+plt.ylabel('Number of Casualties', fontsize=13)
+
+plt.title('Number of Traffic Accidents by Day of Week (in 2014)', fontsize=13)
+plt.savefig('Images/2014-boxplot-accidents-per-dayofweek.png')
+
+'''
+## Traffic Accident Casualties by Time of Day
+For time of day analysis, we separated weekdays and weekends to see what patterns we could find between the 
+number of traffic accidents and hour of day for each day of the week. As expected, we found that for weekdays 
+the number of casualties peaked during the typical commute hours, 8AM and 5PM, for each day. For weekends, the 
+trends are different from weekdays as we see a less defined peak in the number of casualties at around 12PM. 
+After 12PM, the number of casualties slowly decreases for the weekend days. 
+'''
+
+# Create line charts showing trends in the Time of Day and Number of Casualties 
+# Set x_axis
+x_axis = accidents_by_hour_pivot.index
+
+# Plot each weekday and assigning color to be consistent with previous charts
+plt.figure(figsize=(10,6))
 plt.plot(x_axis, accidents_by_hour_pivot['Monday'], color='#DACF68')
 plt.plot(x_axis, accidents_by_hour_pivot['Tuesday'], color='#6CDB69')
 plt.plot(x_axis, accidents_by_hour_pivot['Wednesday'], color='#4CDCAE')
 plt.plot(x_axis, accidents_by_hour_pivot['Thursday'], color='#559BD6')
 plt.plot(x_axis, accidents_by_hour_pivot['Friday'], color='#8757D4')
-plt.xticks(np.arange(len(x_axis)),x_axis)
-plt.xlabel('Hour of Day')
-plt.ylabel('Number of Casualties')
-plt.legend()
-plt.title("2014 Weekday Traffic Accidents by Time of Day")
+
+# Determine y-axis
+y_max = 1300
+step = 100
+y_axis = np.arange(0, y_max+step, step)
+# format y-ticks as comma separated
+y_axis_fmt = ["{:,.0f}".format(y) for y in y_axis]
+# set y-axis limits
+plt.ylim(min(y_axis), max(y_axis))
+
+# Format axes ticks and labels
+plt.xticks(np.arange(len(x_axis)), x_axis, fontsize=13)
+plt.yticks(y_axis, y_axis_fmt, fontsize=13)
+plt.xlabel('Hour of Day', fontsize=13)
+plt.ylabel('Number of Casualties', fontsize=13)
+
+plt.legend(fontsize=13, loc='upper left')
+plt.title("Weekday Traffic Accidents by Time of Day (in 2014)", fontsize=13)
 plt.savefig('Images/2014-weekday-accidents-by-hour.png')
 
-x_axis = accidents_by_hour_pivot.index
+# Plot for Weekends
 plt.figure(figsize=(10,6))
-plt.grid(b='on')
 plt.plot(accidents_by_hour_pivot['Sunday'], color='#DD5B58')
 plt.plot(accidents_by_hour_pivot['Saturday'], color='#DE54BB')
-plt.xticks(np.arange(len(x_axis)), x_axis)
-plt.xlabel('Hour of Day')
-plt.ylabel('Number of Casualties')
-plt.legend()
-plt.title("2014 Weekend Traffic Accidents by Time of Day")
+
+# Determine y-axis
+y_max = 1300
+step = 100
+y_axis = np.arange(0, y_max+step, step)
+# format y-ticks as comma separated
+y_axis_fmt = ["{:,.0f}".format(y) for y in y_axis]
+# set y-axis limits
+plt.ylim(min(y_axis), max(y_axis))
+
+# Format axes ticks and labels
+plt.xticks(np.arange(len(x_axis)), x_axis, fontsize=13)
+plt.yticks(y_axis, y_axis_fmt, fontsize=13)
+plt.xlabel('Hour of Day', fontsize=13)
+plt.ylabel('Number of Casualties', fontsize=13)
+
+plt.legend(fontsize=13, loc='upper left')
+plt.title("Weekend Traffic Accidents by Time of Day (in 2014)", fontsize=13)
 plt.savefig('Images/2014-weekend-accidents-by-hour.png')
 
-# convert 
-traffic_df['Urban or Rural Area'] = [str('Urban') if value==1 else str('Rural') if value==2 else str('Neither') 
-                                     for value in traffic_df['Urban or Rural Area']]
+# ----------------------------------------------------------------------
+# TRAFFIC ACCIDENT CASUALTIES BY URBAN OR RURAL AREA, ROAD TYPE, AND SPEED LIMIT
+# ----------------------------------------------------------------------
+'''
+## Rural vs Urban Traffic Accident Casualties and Severity
+By separating rural and urban accidents, we found that ~63% of casualties in our dataset are from urban areas. We also found that 
+most urban casualties were less severe with severity rating of 3. Compared to urban areas, rural areas had much traffic accidents with 
+much more varied severity. Despite only contributing 37% of the casualties in our data, rural accidents with severity rating of 2 
+made up 7% of total casualties, and rural accidents with severity rating of 1 (the most severe) made up 1% of total casualties. When
+compared to rural areas, urban areas had a similar number of accidents with severity of 2 but had only a third of the number of accidents 
+that rural areas had with severity of 3. 
+'''
+# Create Dataframe for Urban or Rural Area, Road Type and sum for Number of Casualties
+area_road_type = traffic_df.groupby(['Urban or Rural Area',
+                                     'Road Type',
+                                    'Accident Severity']).sum()['Number of Casualties'].to_frame().reset_index()
 
-area_road_type = traffic_df.groupby(['Urban or Rural Area','Road Type']).sum()['Number of Casualties'].to_frame().reset_index()
-urban_road = area_road_type.loc[area_road_type['Urban or Rural Area']=='Urban',:]
-rural_road = area_road_type.loc[area_road_type['Urban or Rural Area']=='Rural',:]
+# Convert Urban or Rural Area (1 or 2) raw data for respective area
+area_road_type['Urban or Rural Area'] = [str('Urban') if value==1 else str('Rural') if value==2 else str('Neither') 
+                                         for value in area_road_type['Urban or Rural Area']]
+area_type = area_road_type.groupby(['Urban or Rural Area', 'Accident Severity']).sum()['Number of Casualties'].to_frame().reset_index()
+total_casualties = area_type['Number of Casualties'].sum()
 
-area_type = area_road_type.groupby(area_road_type['Urban or Rural Area']).sum()['Number of Casualties'].to_frame().reset_index()
-g = sns.barplot(x='Urban or Rural Area', y='Number of Casualties', data=area_type, palette=threeColorPalette)
+road_type = area_road_type.groupby(['Urban or Rural Area', 'Road Type']).sum()['Number of Casualties'].to_frame().reset_index()
+urban_road = road_type.loc[road_type['Urban or Rural Area']=='Urban',:].sort_values('Number of Casualties', 
+                                                                                    ascending=False)
+rural_road = road_type.loc[road_type['Urban or Rural Area']=='Rural',:].sort_values('Number of Casualties', 
+                                                                                    ascending=False)
+
+
+plt.figure(figsize=(10,6))
+g = sns.barplot(x='Urban or Rural Area', y='Number of Casualties', hue='Accident Severity', data=area_type, 
+                palette=threeColorPalette, linewidth=1, edgecolor='black', alpha=0.75)
 sns.set_style('darkgrid')
+
+# Determine y-axis
+y_max = max(area_type['Number of Casualties'])+2500
+y_max -= y_max % -10000
+step = 10000
+y_axis = np.arange(0, y_max+step, step)
+# format y-ticks as comma separated
+y_axis_fmt = ["{:,.0f}".format(y) for y in y_axis]
+# set y-axis limits
+plt.ylim(min(y_axis), max(y_axis))
+
+# Format axes ticks and labels
+plt.xticks(fontsize=13)
+plt.yticks(y_axis, y_axis_fmt, fontsize=13)
+
 plt.xlabel('')
-plt.ylim(0,max(area_type['Number of Casualties'])+5000)
+plt.ylabel('Number of Casualties', fontsize=13)
 
 ax = g.axes
 for p in ax.patches:
-    ax.annotate(s="{:,.0f}".format(p.get_height()), xy=((p.get_x() + p.get_width() / 2., p.get_height()-3000)),
-                ha='center', va='center', color='white', xytext=(0, 2), 
-                textcoords='offset points', weight='bold')  
-ax.tick_params
-plt.title('2014 Traffic Accidents by Area')
-plt.savefig('2014-accidents-by-areatype.png')
+    ax.annotate(s="{:,.0f}%".format((p.get_height()/total_casualties)*100)+"\n"+("{:,.0f}".format(p.get_height())), 
+                xy=((p.get_x() + p.get_width() / 2., p.get_height()+2000)),
+                ha='center', va='center', color='black', xytext=(0, 2), 
+                textcoords='offset points', fontsize=13)  
+plt.legend(loc='upper left', title='Accident Severity', frameon=True)
+plt.title('Total Traffic Accidents by Area (in 2014)', fontsize=13)
+plt.savefig('Images/2014-accidents-by-areatype.png')
 
-explode = (0.0,0.0,0.0,0.05,0.0)
+'''
+## Traffic Casualties by Road Type
+With the Urban and Rural breakout, we also looked at casualties by road type and determined that the majority 
+of traffic accidents occured on a single carriageway for both urban and rural, 78% and 69% of total urban accidents 
+and total rural accidents, respectively. Dual carriageway was the second most popular road type for both urban 
+and rural with 12% and 22%, respectively.
+'''
+
+# Plot donuts for % of Casualties by Road Type for Urban and Rural
+# Plot Urban donut
+explode = (0.0,0.05,0.0,0.0,0.0)
 plt.figure(figsize=(10,6))
 
-plt.pie(urban_road['Number of Casualties'], explode=explode, labels=urban_road['Road Type'], 
+plt.pie(urban_road['Number of Casualties'], explode=explode, labels=urban_road['Road Type'], counterclock=True,
         labeldistance=1.05, autopct='%.0f%%', pctdistance=0.8, shadow=True, colors=fiveColorPalette)
 
-#draw circle
-centre_circle = plt.Circle((0,0),0.70,fc='white')
+# Draw circle
+centre_circle = plt.Circle((0,0),0.60,fc='white')
 fig = plt.gcf()
 fig.gca().add_artist(centre_circle)
 # Equal aspect ratio ensures that pie is drawn as a circle
 plt.axis('equal')  
 plt.tight_layout()
 
-plt.title('Urban Traffic Casualties by Road Type')
+plt.title('Urban Traffic Casualties by Road Type', fontsize=13)
 plt.savefig('Images/2014-urban-accidents-by-roadtype.png')
 
-explode = (0.0,0.0,0.0,0.05,0.0)
+# Plot Rural donut
+explode = (0.0,0.05,0.0,0.0,0.0)
 plt.figure(figsize=(10,6))
 
-plt.pie(rural_road['Number of Casualties'], explode=explode, labels=rural_road['Road Type'], 
+plt.pie(rural_road['Number of Casualties'], explode=explode, labels=rural_road['Road Type'], counterclock=True,
         labeldistance=1.05, autopct='%.0f%%', pctdistance=0.8, shadow=True, colors=fiveColorPalette)
 
-#draw circle
-centre_circle = plt.Circle((0,0),0.70,fc='white')
+# Draw circle
+centre_circle = plt.Circle((0,0),0.60,fc='white')
 fig = plt.gcf()
 fig.gca().add_artist(centre_circle)
 
@@ -625,33 +772,53 @@ fig.gca().add_artist(centre_circle)
 plt.axis('equal')  
 plt.tight_layout()
 
-plt.title('Rural Traffic Casualties by Road Type')
+plt.title('Rural Traffic Casualties by Road Type', fontsize=13)
 plt.savefig('Images/2014-rural-accidents-by-roadtype.png')
 
+'''
+## Urban and Rural Traffic Accidents by Speed Limit
+In our urban and rural analysis, we also looked at how speed limit may have played a factor in number of casualties. 
+We found that the speed limits at the time of accidents were much lower in urban areas than in rural areas. 
+Interestingly, most traffic accidents occured at a speed limit of 30 kilometers per hour for urban araes and 60 
+kilometers per hour for rural areas.
+'''
+
+# Create dataframe grouped by Urban or Rural Area, Road Type, Speed Limit and sum for Number of Casualties
 accidents_speed = traffic_df.groupby(['Urban or Rural Area', 
                                       'Road Type',
                                       'Speed Limit']).sum()['Number of Casualties'].to_frame().reset_index()
-rural_accidents_speed = accidents_speed.loc[accidents_speed['Urban or Rural Area']=='Rural',:]
-rural_accidents_speed = rural_accidents_speed.pivot_table(values='Number of Casualties', 
-                                                          index='Speed Limit', 
-                                                          columns='Road Type', 
-                                                          aggfunc=np.sum,
-                                                          fill_value=0)
-rural_accidents_speed.plot(kind='bar', figsize=(10,6), stacked=True, color=fiveColorPalette)
-plt.xticks(rotation='horizontal')
-plt.title('2014 Rural Traffic Accidents by Speed Limit')
-plt.savefig('Images/2014-rural-accidents-by-speedlimit.png')
+accidents_speed = accidents_speed.sort_values('Number of Casualties')
+# Convert Urban or Rural Area (1 or 2) raw data for respective area
+accidents_speed['Urban or Rural Area'] = [str('Urban') if value==1 else str('Rural') if value==2 else str('Neither') 
+                                         for value in accidents_speed['Urban or Rural Area']]
 
+# Create table for Urban traffic accidents and their speed limits and road types
 urban_accidents_speed = accidents_speed.loc[accidents_speed['Urban or Rural Area']=='Urban',:]
 urban_accidents_speed = urban_accidents_speed.pivot_table(values='Number of Casualties', 
                                                           index='Speed Limit', 
                                                           columns='Road Type', 
                                                           aggfunc=np.sum,
                                                           fill_value=0)
-urban_accidents_speed.plot(kind='bar', figsize=(10,6), stacked=True, color=fiveColorPalette)
-plt.xticks(rotation='horizontal')
-plt.title('2014 Urban Traffic Accidents by Speed Limit')
+# Plot horizontal bar chart for Urban
+urban_accidents_speed.plot(kind='barh', subplots=True, sharex=False, sharey=True,
+                           title='Urban Traffic Casualties', legend=False, fontsize=13,
+                           layout=(1,5), stacked=False, color=fiveColorPalette, edgecolor='black')
+plt.ylabel('Speed Limit (km)', fontsize=13)
 plt.savefig('Images/2014-urban-accidents-by-speedlimit.png')
+
+# Create table for Rural traffic accidents and their speed limits and road types
+rural_accidents_speed = accidents_speed.loc[accidents_speed['Urban or Rural Area']=='Rural',:]
+rural_accidents_speed = rural_accidents_speed.pivot_table(values='Number of Casualties', 
+                                                          index='Speed Limit', 
+                                                          columns='Road Type', 
+                                                          aggfunc=np.sum,
+                                                          fill_value=0)
+# Plot horizontal bar chart for Rural
+rural_accidents_speed.plot(kind='barh', subplots=True, sharex=False, sharey=True, 
+                           title='Rural Traffic Casualties', legend=False, fontsize=13,
+                           layout=(1,5), stacked=True, color=fiveColorPalette, edgecolor='black')
+plt.ylabel('Speed Limit (km)', fontsize=13)
+plt.savefig('Images/2014-rural-accidents-by-speedlimit.png')
 
 # ----------------------------------------------------------------------
 # Part 4: Rural vs. Urban Data Visualization and Analysis
