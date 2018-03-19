@@ -1,5 +1,10 @@
 
+# TrafikiPy
 
+## File Setup: Data Import + Cleaning
+
+
+```python
 # ----------------------------------------------------------------------
 # **Part 1: File Set Up**
 # ----------------------------------------------------------------------
@@ -17,7 +22,6 @@ from datetime import datetime
 pd.set_option('display.max_columns', None)
 
 
-
 # define function to convert to hourly time 
 def to_hour(time):
     try:
@@ -25,16 +29,17 @@ def to_hour(time):
         return int(datetime.strftime(hour, '%H'))
     except Exception:
         return 0
+```
 
 
-
+```python
 #============IMPORT==============
 csv_file_path = os.path.join('Resources', 'accidents_2014.csv')
 traffic_df = pd.read_csv(csv_file_path)
+```
 
 
-
-
+```python
 #============DROP BLANK COLUMNS===========
 
 traffic_df.dropna(
@@ -113,16 +118,256 @@ traffic_df['Hour of Day'] = traffic_df['Time'].apply(to_hour)
 
 # display cleaned file
 traffic_df.head()
+```
 
 
 
-'''
-To ensure that our report would have a cohesive look and feel, we
-established color palettes to use across all visualizations.
-'''
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Accident Index</th>
+      <th>Longitude</th>
+      <th>Latitude</th>
+      <th>Police Force</th>
+      <th>Accident Severity</th>
+      <th>Number of Vehicles</th>
+      <th>Number of Casualties</th>
+      <th>Date</th>
+      <th>Day of Week</th>
+      <th>Time</th>
+      <th>Local Authority District</th>
+      <th>Local Authority Highway</th>
+      <th>1st Road Class</th>
+      <th>1st Road Number</th>
+      <th>Road Type</th>
+      <th>Speed Limit</th>
+      <th>Junction Control</th>
+      <th>2nd Road Class</th>
+      <th>2nd Road Number</th>
+      <th>Pedestrian Crossing Human Control</th>
+      <th>Pedestrian Crossing Physical Facilities</th>
+      <th>Light Conditions</th>
+      <th>Weather Conditions</th>
+      <th>Road Surface Conditions</th>
+      <th>Special Conditions at Site</th>
+      <th>Carriageway Hazards</th>
+      <th>Urban or Rural Area</th>
+      <th>Police Attended Scene of Accident</th>
+      <th>LSOA of Accident Location</th>
+      <th>Year</th>
+      <th>Month</th>
+      <th>Day</th>
+      <th>Hour of Day</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>201401BS70001</td>
+      <td>-0.206443</td>
+      <td>51.496345</td>
+      <td>1</td>
+      <td>3</td>
+      <td>2</td>
+      <td>1</td>
+      <td>2014-01-09</td>
+      <td>5</td>
+      <td>13:21</td>
+      <td>12</td>
+      <td>E09000020</td>
+      <td>3</td>
+      <td>315</td>
+      <td>Single carriageway</td>
+      <td>30</td>
+      <td>None</td>
+      <td>-1</td>
+      <td>0</td>
+      <td>None within 50 metres</td>
+      <td>No physical crossing within 50 meters</td>
+      <td>Daylight: Street light present</td>
+      <td>Raining without high winds</td>
+      <td>Wet/Damp</td>
+      <td>None</td>
+      <td>None</td>
+      <td>1</td>
+      <td>No</td>
+      <td>E01002814</td>
+      <td>2014</td>
+      <td>1</td>
+      <td>9</td>
+      <td>13</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>201401BS70006</td>
+      <td>-0.171308</td>
+      <td>51.495892</td>
+      <td>1</td>
+      <td>3</td>
+      <td>2</td>
+      <td>1</td>
+      <td>2014-01-09</td>
+      <td>5</td>
+      <td>8:50</td>
+      <td>12</td>
+      <td>E09000020</td>
+      <td>3</td>
+      <td>4</td>
+      <td>Single carriageway</td>
+      <td>30</td>
+      <td>Giveway or uncontrolled</td>
+      <td>3</td>
+      <td>4</td>
+      <td>None within 50 metres</td>
+      <td>Central refuge</td>
+      <td>Daylight: Street light present</td>
+      <td>Fine without high winds</td>
+      <td>Dry</td>
+      <td>None</td>
+      <td>None</td>
+      <td>1</td>
+      <td>Yes</td>
+      <td>E01002821</td>
+      <td>2014</td>
+      <td>1</td>
+      <td>9</td>
+      <td>8</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>201401BS70009</td>
+      <td>-0.201326</td>
+      <td>51.498245</td>
+      <td>1</td>
+      <td>3</td>
+      <td>2</td>
+      <td>1</td>
+      <td>2014-01-10</td>
+      <td>6</td>
+      <td>18:25</td>
+      <td>12</td>
+      <td>E09000020</td>
+      <td>3</td>
+      <td>315</td>
+      <td>Single carriageway</td>
+      <td>30</td>
+      <td>Giveway or uncontrolled</td>
+      <td>6</td>
+      <td>0</td>
+      <td>None within 50 metres</td>
+      <td>No physical crossing within 50 meters</td>
+      <td>Darkness: Street lights present and lit</td>
+      <td>Fine without high winds</td>
+      <td>Wet/Damp</td>
+      <td>None</td>
+      <td>None</td>
+      <td>1</td>
+      <td>Yes</td>
+      <td>E01002817</td>
+      <td>2014</td>
+      <td>1</td>
+      <td>10</td>
+      <td>18</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>201401BS70011</td>
+      <td>-0.207445</td>
+      <td>51.507511</td>
+      <td>1</td>
+      <td>3</td>
+      <td>2</td>
+      <td>1</td>
+      <td>2014-01-10</td>
+      <td>6</td>
+      <td>10:55</td>
+      <td>12</td>
+      <td>E09000020</td>
+      <td>5</td>
+      <td>0</td>
+      <td>Single carriageway</td>
+      <td>30</td>
+      <td>Giveway or uncontrolled</td>
+      <td>6</td>
+      <td>0</td>
+      <td>None within 50 metres</td>
+      <td>No physical crossing within 50 meters</td>
+      <td>Daylight: Street light present</td>
+      <td>Fine without high winds</td>
+      <td>Dry</td>
+      <td>None</td>
+      <td>None</td>
+      <td>1</td>
+      <td>Yes</td>
+      <td>E01002871</td>
+      <td>2014</td>
+      <td>1</td>
+      <td>10</td>
+      <td>10</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>201401BS70013</td>
+      <td>-0.179731</td>
+      <td>51.497822</td>
+      <td>1</td>
+      <td>3</td>
+      <td>2</td>
+      <td>1</td>
+      <td>2014-01-05</td>
+      <td>1</td>
+      <td>20:26</td>
+      <td>12</td>
+      <td>E09000020</td>
+      <td>5</td>
+      <td>0</td>
+      <td>Single carriageway</td>
+      <td>30</td>
+      <td>Giveway or uncontrolled</td>
+      <td>5</td>
+      <td>0</td>
+      <td>None within 50 metres</td>
+      <td>No physical crossing within 50 meters</td>
+      <td>Darkness: Street lights present and lit</td>
+      <td>Raining without high winds</td>
+      <td>Wet/Damp</td>
+      <td>None</td>
+      <td>None</td>
+      <td>1</td>
+      <td>Yes</td>
+      <td>E01002892</td>
+      <td>2014</td>
+      <td>1</td>
+      <td>5</td>
+      <td>20</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
 
 
+## Report Formatting
+To ensure that our report would have a cohesive look and feel, we established color palettes to use across all visualizations.
+
+
+```python
 # ----------------------------------------------------------------------
 # **Part 2: Set up overall formatting**
 # ----------------------------------------------------------------------
@@ -157,10 +402,28 @@ plt.show(five)
 plt.show(seven)
 plt.show(eight)
 plt.show(twelve)
+```
+
+
+![png](output_5_0.png)
 
 
 
-'''
+![png](output_5_1.png)
+
+
+
+![png](output_5_2.png)
+
+
+
+![png](output_5_3.png)
+
+
+
+![png](output_5_4.png)
+
+
 # Basic Data Visualization
 ## Geographic Visualization of Accidents in the UK
 To get a sense of our overall dataset, we created a geographic visualization 
@@ -170,7 +433,8 @@ Upon doing so, we discovered that, although the dataset claimed to be for
 the entire United Kingdom, the data was in fact only from England and 
 Wales.
 
-**Two Key Trends in this Visualization:**
+**Two Key Trends in this Visualization**
+
 1. The data appears to cluster in a few key areas. Upon comparison with a
 proper map of England, it becomes clear that these key areas were the largest
 cities in Britain and Wales (Source: [CityMetric, 09/2015](https://www.citymetric.com/skylines/where-are-largest-cities-britain-1404). This would seem to indicate a possible correlation between 
@@ -181,6 +445,7 @@ assumption that the majority of accidents would be minor so-called
 "fender-benders."
 
 **Possible Issue**
+
 A number of points appear to not be properly placed on the map, as 
 they're in the ocean and it's rather unlikely that a car accident would 
 occur over water. 
@@ -189,9 +454,11 @@ Given that the map is an approximation generated using
 only straight lines, the most likely explanation is that these points are
 caused by an inaccurate map. However, it must be said that there is a 
 possiblility that there are some errors in the Latitude and Longitude data.
-'''
+
+
+```python
 # ----------------------------------------------------------------------
-# **Part 2: Basic Data Visualizations**
+# **Part 2: Basic Data Visualizations** (Heidi)
 # This section contains basic data visualizations for the overall 
 # dataset without deep analytical goals. 
 # ----------------------------------------------------------------------
@@ -249,8 +516,16 @@ py.image.save_as(fig, filename='Images/2014 Traffic Accidents.png')
 
 # display plot
 py.image.ishow(fig)
+```
 
-'''
+
+<script>requirejs.config({paths: { 'plotly': ['https://cdn.plot.ly/plotly-latest.min']},});if(!window.Plotly) {{require(['plotly'],function(plotly) {window.Plotly=plotly;});}}</script>
+
+
+
+![png](output_7_1.png)
+
+
 ## Geographic Visualization of Accidents in London
 The majority of our data appeared concentrated around London, which makes
 sense given that London was defined as a megacity during 2014 (Source: 
@@ -263,7 +538,7 @@ non-negligible numbers of Accident Severity 2 ("Serious") accidents. In
 addition, a number of Accident Severity 1 ("Fatal") became visible, including
 a possible cluster in the center of London.
 
-The most logical explanation for the cluster is random distibution. Given that 
+The most logical explanation for the cluster is random distribution. Given that 
 so many of the accidents are concentrated in the London area, it would be 
 expected that we'd see a similar concentration of Serious and Fatal accidents,
 at admittedly lower rates that Slight but in similar proportion, unless there
@@ -273,8 +548,9 @@ However, it is possible that certain areas of London (perhaps
 older ones) have road designs or traffic patterns that make them more prone
 to serious accidents. Review of those particular areas would be a good 
 avenue for further study to see if any commonalities could be uncovered.
-'''
 
+
+```python
 # ----------------------------------------------------------------------
 # Part 2.1.1: Geographical scatterplot for just London
 # ----------------------------------------------------------------------
@@ -323,7 +599,15 @@ py.image.save_as(fig, filename='Images/2014 Traffic Accidents - London Only.png'
 
 # display plot
 py.image.ishow(fig)
+```
 
+
+![png](output_9_0.png)
+
+
+
+```python
+# prep for next analysis
 # set up lists/dicts of months
 month_list = ['January', 'February', 'March', 'April', 'May', 'June', 
               'July', 'August', 'September', 'October', 'November', 
@@ -332,8 +616,8 @@ monthLength_list = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 tripleMonthLength_list = [31, 31, 31, 28, 28, 28, 31, 31, 31, 30, 30, 30, 
                           31, 31, 31, 30, 30, 30, 31, 31, 31, 31, 31, 31,
                           30, 30, 30, 31, 31, 31, 30, 30, 30, 31, 31, 31]
+```
 
-'''
 ## Normalized Count of Traffic Accidents by Month
 In order to account for variations in month length, we made the decision
 to normalize our monthly data by the number of days in each month.
@@ -353,8 +637,9 @@ It makes sense that drivers would avoid being out in such weather or, quite
 possibly, could not go out in such weather (given that some roadways were
 reportedly flooded), thus resulting in a lower accident count purely because
 of fewer drivers on the road.
-'''
 
+
+```python
 # ----------------------------------------------------------------------
 # Part 2.2: Count of Traffic Accidents by Month
 # ----------------------------------------------------------------------
@@ -389,9 +674,119 @@ trafficDataByMonth_df['Date'] = month_list
 # display results
 plt.show()
 trafficDataByMonth_df
+```
 
-'''
-## Accident Severity by Month (v.1)
+
+![png](output_12_0.png)
+
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Date</th>
+      <th>Accident Count</th>
+      <th>Month Length (Num Days)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>January</td>
+      <td>3764</td>
+      <td>31</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>February</td>
+      <td>4318</td>
+      <td>28</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>March</td>
+      <td>4356</td>
+      <td>31</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>April</td>
+      <td>4056</td>
+      <td>30</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>May</td>
+      <td>4286</td>
+      <td>31</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>June</td>
+      <td>4619</td>
+      <td>30</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>July</td>
+      <td>4706</td>
+      <td>31</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>August</td>
+      <td>4414</td>
+      <td>31</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>September</td>
+      <td>4504</td>
+      <td>30</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>October</td>
+      <td>5132</td>
+      <td>31</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>November</td>
+      <td>4924</td>
+      <td>30</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>December</td>
+      <td>5068</td>
+      <td>31</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+## Accident Severity by Month
+### Accident Severity by Month (v.1)
 Next, we broke down the overall accident count by Severity in two different
 visualizations: a grouped bar chart (v1) and a stacked bar chart (v2) (when the grouped
 bar chart proved difficult to read). Again, all data was normalized by the
@@ -407,7 +802,9 @@ or other seasonal events changes. It would seem, from looking at this data,
 that looking more closely at the causes of minor accidents could lead to
 the most actionable data vis-a-vis traffic accident reduction. Further 
 investigation would be needed to determine.
-'''
+
+
+```python
 # ----------------------------------------------------------------------
 # Part 2.3: Grouped Bar chart of severity by month
 # ----------------------------------------------------------------------
@@ -442,11 +839,16 @@ plt.title("Normalized Accident Severity by Month", size=16)
 plt.ylabel("Normalized Accident Count")
 plt.savefig('Images/normalizedAccidentSeverityByMonth.png')
 plt.show(accidentSeverityByMonth_plt)
+```
 
-'''
-## Accident Severity by Month (v.2)
-'''
 
+![png](output_14_0.png)
+
+
+### Accident Severity by Month (v.2)
+
+
+```python
 # create base dataframe to work with
 accSevByMonth2_df = traffic_df[['Date', 'Accident Index', 'Accident Severity']].copy()
 accSevByMonth2_df.index = accSevByMonth2_df['Date']
@@ -495,19 +897,23 @@ plt.legend(handles=[sev1, sev2, sev3],
            loc='best', title='Accident Severity')
 plt.savefig('Images/stackedSeverityByMonth.png')
 plt.show()
+```
 
-# ----------------------------------------------------------------------
-# Part 3: TRAFFIC ACCIDENT CASUALTIES BY DAY OF WEEK AND TIME OF DAY
-# ----------------------------------------------------------------------
 
-'''
+![png](output_16_0.png)
+
+
+# Traffic Accident Casulties by Week & Time of Day
 ## Number of Casualties by Day of Week
-The objective was to determine which day of the week had the most casualties in 2014. We summed the number of casualties
-for each day of the week and found that Friday had the total most number of casualties while Sunday had the
+The objective was to determine which day of the week had the most casualties in 2014. We summed the number of casualties for each day of the week and found that Friday had the total most number of casualties while Sunday had the
 least number of casualties. For further analysis, we will look at the average number of casualties for each day of the
 week in order to adjust for differences in the number of days for each week day and to see potential outliers in the data. 
-'''
 
+
+```python
+# ----------------------------------------------------------------------
+# Part 3: TRAFFIC ACCIDENT CASUALTIES BY DAY OF WEEK AND TIME OF DAY (Dolly)
+# ----------------------------------------------------------------------
 # Create dataframe for Casualties by Day of Week and Hour of Day
 accidents_by_weeknum = traffic_df.groupby(['Day of Week']).sum()['Number of Casualties'].to_frame().reset_index()
 accidents_by_date = traffic_df.groupby(['Date', 
@@ -556,16 +962,21 @@ for p in ax.patches:
 plt.title('Total Traffic Accidents by Day of Week (in 2014)', fontsize=13)
 plt.savefig('Images/2014-accidents-by-dayofweek.png')
 plt.show()
+```
 
-'''
+
+![png](output_18_0.png)
+
+
 ## Distribution in Number of Casualties in a day for each day of the week
 By looking at the distribution of daily traffic accident casualties for each day of the week, we were able 
 to determine that Friday had the highest median number of Casualties followed by Tuesday with the second 
 highest median. The box-and-whisker plot also allows us to see that outliers ahd a great impact for Wednesday.
 We can see that a few outliers on the higher end in number of casualties contributed to bringing up Wednesday's 
 overall number of casualties for 2014.
-'''
 
+
+```python
 # Plot boxplot showing average number of casualties by day of week
 plt.figure(figsize=(10,6))
 sns.set_style('darkgrid')
@@ -594,16 +1005,21 @@ plt.ylabel('Number of Casualties', fontsize=13)
 plt.title('Number of Traffic Accidents by Day of Week (in 2014)', fontsize=13)
 plt.savefig('Images/2014-boxplot-accidents-per-dayofweek.png')
 plt.show()
+```
 
-'''
+
+![png](output_20_0.png)
+
+
 ## Traffic Accident Casualties by Time of Day
 For time of day analysis, we separated weekdays and weekends to see what patterns we could find between the 
 number of traffic accidents and hour of day for each day of the week. As expected, we found that for weekdays 
 the number of casualties peaked during the typical commute hours, 8AM and 5PM, for each day. For weekends, the 
 trends are different from weekdays as we see a less defined peak in the number of casualties at around 12PM. 
 After 12PM, the number of casualties slowly decreases for the weekend days. 
-'''
 
+
+```python
 # Create line charts showing trends in the Time of Day and Number of Casualties 
 # Set x_axis
 x_axis = accidents_by_hour_pivot.index
@@ -635,7 +1051,14 @@ plt.legend(fontsize=13, loc='upper left')
 plt.title("Weekday Traffic Accidents by Time of Day (in 2014)", fontsize=13)
 plt.savefig('Images/2014-weekday-accidents-by-hour.png')
 plt.show()
+```
 
+
+![png](output_22_0.png)
+
+
+
+```python
 # Plot for Weekends
 plt.figure(figsize=(10,6))
 plt.plot(accidents_by_hour_pivot['Sunday'], color='#DD5B58')
@@ -660,11 +1083,12 @@ plt.legend(fontsize=13, loc='upper left')
 plt.title("Weekend Traffic Accidents by Time of Day (in 2014)", fontsize=13)
 plt.savefig('Images/2014-weekend-accidents-by-hour.png')
 plt.show()
+```
 
-# ----------------------------------------------------------------------
-# TRAFFIC ACCIDENT CASUALTIES BY URBAN OR RURAL AREA, ROAD TYPE, AND SPEED LIMIT
-# ----------------------------------------------------------------------
-'''
+
+![png](output_23_0.png)
+
+
 ## Rural vs Urban Traffic Accident Casualties and Severity
 By separating rural and urban accidents, we found that ~63% of casualties in our dataset are from urban areas. We also found that 
 most urban casualties were less severe with severity rating of 3. Compared to urban areas, rural areas had much traffic accidents with 
@@ -672,7 +1096,9 @@ much more varied severity. Despite only contributing 37% of the casualties in ou
 made up 7% of total casualties, and rural accidents with severity rating of 1 (the most severe) made up 1% of total casualties. When
 compared to rural areas, urban areas had a similar number of accidents with severity of 2 but had only a third of the number of accidents 
 that rural areas had with severity of 1. 
-'''
+
+
+```python
 # Create Dataframe for Urban or Rural Area, Road Type and sum for Number of Casualties
 area_road_type = traffic_df.groupby(['Urban or Rural Area',
                                      'Road Type',
@@ -723,15 +1149,20 @@ plt.legend(loc='upper left', title='Accident Severity', frameon=True)
 plt.title('Total Traffic Accidents by Area (in 2014)', fontsize=13)
 plt.savefig('Images/2014-accidents-by-areatype.png')
 plt.show()
+```
 
-'''
+
+![png](output_25_0.png)
+
+
 ## Traffic Casualties by Road Type
 With the Urban and Rural breakout, we also looked at casualties by road type and determined that the majority 
 of traffic accidents occured on a single carriageway for both urban and rural, 78% and 69% of total urban accidents 
 and total rural accidents, respectively. Dual carriageway was the second most popular road type for both urban 
 and rural with 12% and 22%, respectively.
-'''
 
+
+```python
 # Plot donuts for % of Casualties by Road Type for Urban and Rural
 # Plot Urban donut
 explode = (0.0,0.05,0.0,0.0,0.0)
@@ -751,7 +1182,14 @@ plt.tight_layout()
 plt.title('Urban Traffic Casualties by Road Type', fontsize=13)
 plt.savefig('Images/2014-urban-accidents-by-roadtype.png')
 plt.show()
+```
 
+
+![png](output_27_0.png)
+
+
+
+```python
 # Plot Rural donut
 explode = (0.0,0.05,0.0,0.0,0.0)
 plt.figure(figsize=(10,6))
@@ -771,15 +1209,20 @@ plt.tight_layout()
 plt.title('Rural Traffic Casualties by Road Type', fontsize=13)
 plt.savefig('Images/2014-rural-accidents-by-roadtype.png')
 plt.show()
+```
 
-'''
+
+![png](output_28_0.png)
+
+
 ## Urban and Rural Traffic Accidents by Speed Limit
 In our urban and rural analysis, we also looked at how speed limit may have played a factor in number of casualties. 
 We found that the speed limits at the time of accidents were much lower in urban areas than in rural areas. 
 Interestingly, most traffic accidents occured at a speed limit of 30 kilometers per hour for urban araes and 60 
 kilometers per hour for rural areas.
-'''
 
+
+```python
 # Create dataframe grouped by Urban or Rural Area, Road Type, Speed Limit and sum for Number of Casualties
 accidents_speed = traffic_df.groupby(['Urban or Rural Area', 
                                       'Road Type',
@@ -803,7 +1246,14 @@ urban_accidents_speed.plot(kind='barh', subplots=True, sharex=False, sharey=True
 plt.ylabel('Speed Limit (km)', fontsize=13)
 plt.savefig('Images/2014-urban-accidents-by-speedlimit.png')
 plt.show()
+```
 
+
+![png](output_30_0.png)
+
+
+
+```python
 # Create table for Rural traffic accidents and their speed limits and road types
 rural_accidents_speed = accidents_speed.loc[accidents_speed['Urban or Rural Area']=='Rural',:]
 rural_accidents_speed = rural_accidents_speed.pivot_table(values='Number of Casualties', 
@@ -818,9 +1268,18 @@ rural_accidents_speed.plot(kind='barh', subplots=True, sharex=False, sharey=True
 plt.ylabel('Speed Limit (km)', fontsize=13)
 plt.savefig('Images/2014-rural-accidents-by-speedlimit.png')
 plt.show()
+```
 
+
+![png](output_31_0.png)
+
+
+# Rural vs. Urban Data Visualization and Analysis
+
+
+```python
 # ----------------------------------------------------------------------
-# Part 4: Rural vs. Urban Data Visualization and Analysis
+# Part 4: Rural vs. Urban Data Visualization and Analysis (Charles)
 # ----------------------------------------------------------------------
 
 #--------------- Create Data Frames for Urban v. Rural --------------- 
@@ -864,9 +1323,13 @@ plt.legend(title='City Type', loc='center left', bbox_to_anchor=(1, 0.5), fontsi
 #--------------- Save and Show --------------- 
 plt.savefig('Images/Severity and Casualty by City Type.png')
 plt.show()
+```
 
-'''
-Observations
+
+![png](output_33_0.png)
+
+
+## Observations
 
 1. Urban Accidents means throughout the year are typically closer to 3 and casualties are usually closer to 1.
 This is likely due to the fact that more "fender benders" occur, which are low-intensity low-casualty events.
@@ -877,8 +1340,9 @@ pushing them higher.
 
 3. "One is less likely to get into an accident in a rural setting, 
 but if an accident is to occur it is likely to be more severe."
-'''
 
+
+```python
 urban = traffic_df[traffic_df["Urban or Rural Area"] == 1]
 rural = traffic_df[traffic_df["Urban or Rural Area"] == 2]
 
@@ -923,9 +1387,13 @@ legend.legendHandles[1]._sizes = [300]
 #--------------- Save and Show --------------- 
 plt.savefig('Images/Severity and Casualty by Police Force.png')
 plt.show()
+```
 
-'''
-Observations
+
+![png](output_35_0.png)
+
+
+## Observations
 
 1. A similar pattern emerges when looking at the data through average severity and rate of casualty 
 continues to be higher in rural settings than urban settings.
@@ -935,103 +1403,150 @@ compared to Police Force.
 
 3. It is evident that some Police Forces encounter far less accidents. Typically, these have a
 higher tendency of demonstrating a higher average severity/casualty rate.
-'''
+
+# Weather and Other Road Conditions & Traffic Accidents
+## Weather and Severity Correlation 
+
+Analysis: Comparing correlation between Severity and Weather Condition.
+
+Process: Mapping out what type of weather resulted in the highest kind of severity
+
+Information: 1 - Fatal | 2 - Serious | 3 - Slight |Highest means good and Lowest means bad.
+
+Trend: Highest Severity was caused during a weather without high winds. | Lowest was during Snow and Fog weather
 
 
+```python
 # ----------------------------------------------------------------------
 # Part 5: Pratham
 # ----------------------------------------------------------------------
 
-# Weather and Severity Correlation 
-
-#Analysis: Comparing correlation between Severity and Weather Condition.
-#Process: Mapping out what type of weather resulted in the highest kind of severity
-#Information: 1 - Fatal | 2 - Serious | 3 - Slight |Highest means good and Lowest means bad.
-#Trend: Highest Severity was caused during a weather without high winds. | Lowest was during Snow and Fog weather
-
 grouper_1 = traffic_df[['Weather Conditions','Accident Severity']]
 weather_severity = grouper_1.groupby(by = 'Weather Conditions',as_index=False).sum()
 plt = sns.barplot(weather_severity['Accident Severity'],weather_severity['Weather Conditions'])
-pl.savefig('Images/Weather and Severity Correlation.png')
+pl.savefig('Images/Weather and Severity Correlation.png')# # Severity and Weather Correlation
 
-# # Severity and Weather Correlation
+```
 
 
+![png](output_38_0.png)
 
-#Analysis: Comparing correlation between Severity and Weather Condition.
-#Process: Cross referencing our previous findings by grouping the same data by Severity and seeing if the data is accurate.
-#Information: 1 - Fatal | 2 - Serious | 3 - Slight |Highest means good and Lowest means bad.
-#Trend: Lots of entries of severity 3 and less of severity of 1. 
 
+# Accident Severity and Weather Correlation
+Analysis: Comparing correlation between Severity and Weather Condition.
+
+Process: Cross referencing our previous findings by grouping the same data by Severity and seeing if the data is accurate.
+
+Information: 1 - Fatal | 2 - Serious | 3 - Slight |Highest means good and Lowest means bad.
+
+Trend: Lots of entries of severity 3 and less of severity of 1. 
+
+
+```python
 grouper_a = traffic_df[['Weather Conditions','Accident Severity']]
 weather_severity_1 = grouper_a.groupby(by = 'Accident Severity',as_index=False).count()
 plt1 = sns.barplot(weather_severity_1['Accident Severity'],weather_severity_1['Weather Conditions'])
 pl.savefig('Images/Severity and Weather Correlation.png')
+```
 
 
-# # Light Condition and Severity Correlation
+![png](output_40_0.png)
 
 
+## Light Condition and Severity Correlation
 
-#Analysis: Comparing correlation between Severity and Light Condition.
-#Process: Mapping out what type of weather resulted in the highest kind of severity.
-#Information: 1 - Fatal | 2 - Serious | 3 - Slight |Highest means good and Lowest means bad.
-#Trend: Highest Severity was caused during Daylight. | Lowest was during Darkness with dim street lights.
+Analysis: Comparing correlation between Severity and Light Condition.
+
+Process: Mapping out what type of weather resulted in the highest kind of severity.
+
+Information: 1 - Fatal | 2 - Serious | 3 - Slight |Highest means good and Lowest means bad.
+
+Trend: Highest Severity was caused during Daylight. | Lowest was during Darkness with dim street lights.
+
+
+```python
 grouper_2 = traffic_df[['Light Conditions','Accident Severity']]
 light_condition_severity = grouper_2.groupby(by = 'Light Conditions',as_index=False).sum()
 plt = sns.barplot(light_condition_severity['Accident Severity'],light_condition_severity['Light Conditions'])
 pl.savefig('Images/Light Condition and Severity Correlation')
+```
 
 
-# # Severity Condition and Light Condition
+![png](output_42_0.png)
 
 
+## Severity Condition and Light Condition
 
-#Analysis: Comparing correlation between Severity and Weather Condition.
-#Process: Cross referencing our previous findings by grouping the same data by Severity and seeing if the data is accurate.
-#Information: 1 - Fatal | 2 - Serious | 3 - Slight |Highest means good and Lowest means bad.
-#Trend: Lots of entries of severity 3 and less of severity of 1. 
+Analysis: Comparing correlation between Severity and Weather Condition.
+
+Process: Cross referencing our previous findings by grouping the same data by Severity and seeing if the data is accurate.
+
+Information: 1 - Fatal | 2 - Serious | 3 - Slight |Highest means good and Lowest means bad.
+
+Trend: Lots of entries of severity 3 and less of severity of 1. 
+
+
+```python
 grouper_b = traffic_df[['Light Conditions','Accident Severity']]
 light_condition_severity_1 = grouper_b.groupby(by = 'Accident Severity',as_index=False).count()
 plt = sns.barplot(light_condition_severity_1['Accident Severity'],light_condition_severity_1['Light Conditions'])
 pl.savefig('Images/Severity Condition and Light Condition')
+```
 
 
-# # Road Type and Severity Correlation
+![png](output_44_0.png)
 
 
+## Road Type and Severity Correlation
 
-#Analysis: Comparing correlation between Severity and Road type.
-#Process: Mapping out what type of weather resulted in the highest kind of severity.
-#Information: 1 - Fatal | 2 - Serious | 3 - Slight |Highest means good and Lowest means bad.
-#Trend: Highest Severity was caused during Single Carriageway. | Lowest was during Darkness with slim road.
+Analysis: Comparing correlation between Severity and Road type.
+
+Process: Mapping out what type of weather resulted in the highest kind of severity.
+
+Information: 1 - Fatal | 2 - Serious | 3 - Slight |Highest means good and Lowest means bad.
+
+Trend: Highest Severity was caused during Single Carriageway. | Lowest was during Darkness with slim road.
+
+
+```python
 grouper_3 = traffic_df[['Road Type','Accident Severity']]
 road_type_severity = grouper_3.groupby(by = 'Road Type',as_index=False).sum()
 plt = sns.barplot(road_type_severity['Accident Severity'],road_type_severity['Road Type'])
 pl.savefig('Images/Road Type and Severity Correlation')
+```
 
 
-# # Severity and Road Type Correlation
+![png](output_46_0.png)
 
 
+## Severity and Road Type Correlation
 
-#Analysis: Comparing correlation between Severity and Weather Condition.
-#Process: Cross referencing our previous findings by grouping the same data by Severity and seeing if the data is accurate.
-#Information: 1 - Fatal | 2 - Serious | 3 - Slight |Highest means good and Lowest means bad.
-#Trend: Lots of entries of severity 3 and less of severity of 1. 
+Analysis: Comparing correlation between Severity and Weather Condition.
+
+Process: Cross referencing our previous findings by grouping the same data by Severity and seeing if the data is accurate.
+
+Information: 1 - Fatal | 2 - Serious | 3 - Slight |Highest means good and Lowest means bad.
+
+Trend: Lots of entries of severity 3 and less of severity of 1. 
+
+
+```python
 grouper_c = traffic_df[['Road Type','Accident Severity']]
 road_type_severity_1 = grouper_c.groupby(by = 'Accident Severity',as_index=False).count()
 plt = sns.barplot(road_type_severity_1['Accident Severity'],road_type_severity_1['Road Type'])
 pl.savefig('Images/Severity and Road Type Correlation')
+```
 
 
-# # Converting Weather Condition to Numbers 
+![png](output_48_0.png)
 
 
+## Converting Weather Condition to Numbers 
+
+Process: converting weather string data to numbers to train the machine learning algorithm
 
 
-#process: converting weather string data to numbers to train the machine learning algorithm
-
+```python
 weather_condition_number_list = []
 
 for condition in traffic_df['Weather Conditions']:
@@ -1059,15 +1574,14 @@ for condition in traffic_df['Weather Conditions']:
         
     if (condition == 'Snowing with high winds'):
         weather_condition_number_list.append(1)
+```
+
+## Converting Road Type to Numbers
+
+process: converting Road Type string data to numbers to train the machine learning algorithm
 
 
-# # Converting Road Type to Numbers
-
-
-
-
-#process: converting Road Type string data to numbers to train the machine learning algorithm
-
+```python
 road_type_number_list = []
 
 traffic_df['Road Type'].value_counts()
@@ -1088,15 +1602,14 @@ for road in traffic_df['Road Type']:
         
     if (road == 'Slip road'):
         road_type_number_list.append(1)
+```
+
+## Light Conditions to Numbers
+
+process: converting Light Condition string data to numbers to train the machine learning algorithm
 
 
-# # Light Conditions to Numbers
-
-
-
-
-#process: converting Light Condition string data to numbers to train the machine learning algorithm
-
+```python
 light_condition_number_list = []
 
 for condition in traffic_df['Light Conditions']:
@@ -1115,11 +1628,10 @@ for condition in traffic_df['Light Conditions']:
         
     if (condition == 'Darkness: Street lights present but unlit'):
         light_condition_number_list.append(1)
-        
+```
 
 
-
-
+```python
 #appending it into a data frame
 
 training_data = pd.DataFrame({'Weather':weather_condition_number_list,
@@ -1127,12 +1639,14 @@ training_data = pd.DataFrame({'Weather':weather_condition_number_list,
                               'Light Condition':light_condition_number_list                          
                               })
 
+```
 
-# # Test Data
+## Test Data
+
+process: using random function to generate test data for the prediction algorithm
 
 
-#process: using random function to generate test data for the prediction algorithm
-
+```python
 import random    
 
 weather_testing = []
@@ -1144,19 +1658,14 @@ for i in range (54147):
     weather_testing.append(random.randrange(0,4,1))  
     road_testing.append(random.randrange(0,4,1))
     light_testing.append(random.randrange(0,4,1))  
-  
-     
-
-
-
-
 
     weather_testing.append(random.randrange(0,8,1))  
     road_testing.append(random.randrange(0,5,1))
     light_testing.append(random.randrange(0,5,1))  
+```
 
 
-
+```python
 #process: appending it to a set of 3 to create test data
 test_data = []
 for i in range(54147):
@@ -1165,23 +1674,24 @@ for i in range(54147):
     temp.append(road_testing[i])
     temp.append(light_testing[i])
     test_data.append(temp)      
+```
+
+## Training Algorithm
+
+Creating a classifier|training the algorithm|Testing the algorithm
 
 
-# # Training Algorithm
-
-
-
-#Creating a classifier|training the algorithm|Testing the algorithm
-
+```python
 X = training_data[['Weather','Road Type','Light Condition']]
 Y = traffic_df['Accident Severity']
 from sklearn.naive_bayes import GaussianNB
 clf = GaussianNB()
 clf.fit(X, Y)
 prediction = clf.predict(test_data)
+```
 
 
-
+```python
 # # Test Labels
 
 
@@ -1204,13 +1714,13 @@ other_df = pd.DataFrame({'Weather Conditions': traffic_df['Weather Conditions'],
                          'Light Condition': traffic_df['Light Conditions'],
                          'Severity': traffic_df['Accident Severity']})
 other_df.to_csv('Resources/other_file.csv')
+```
+
+## Test Labels
+Process: Creating the test labels to measure the accuracy of the prediction model
 
 
-# # Test Labels
-
-
-
-#Process: Creating the test labels to measure the accuracy of the prediction model
+```python
 test_labels = []
 for i in range(0, len(traffic_df)):
     
@@ -1240,19 +1750,28 @@ for i in range(0, len(traffic_df)):
        traffic_df.iloc[i]['Light Conditions']== 'Darkness: Street lights present but unlit'):
         
         test_labels.append(1)
-    
+```
+
+## Accuracy
+
+Using the sklearn accuracy score to measure the accuracy of the prediction model. 
 
 
-# # Accuracy
-
-
-
-# Using the sklearn accuracy score to measure the accuracy of the prediction model. 
+```python
 import numpy as np
 from sklearn.metrics import accuracy_score
 accuracy_score(test_labels[0:54147], prediction)
+```
 
 
+
+
+    0.561342271963359
+
+
+
+
+```python
 urban = traffic_df[traffic_df["Urban or Rural Area"] == 1]
 rural = traffic_df[traffic_df["Urban or Rural Area"] == 2]
 
@@ -1263,8 +1782,6 @@ rural_count_3 = rural.groupby(["Date"]).count()["Accident Index"]
 urban_mean_1 = urban.groupby(["Date"]).mean()["Accident Severity"]
 urban_mean_2 = urban.groupby(["Date"]).mean()["Number of Casualties"]
 urban_count_3 = urban.groupby(["Date"]).count()["Accident Index"]
-
-plt.rcParams["figure.figsize"] = [16,9]
 
 plt.title("Accident Severity and Average Casualty by City Type", size=20)
 plt.ylabel("Average Severity", size=20)
@@ -1287,3 +1804,20 @@ plt.scatter(urban_mean_2,
 
 plt.legend(title='City Type', loc='center left', bbox_to_anchor=(1, 0.5), fontsize=15)
 plt.savefig('Images/Severity and Casualty by City Type.png')
+```
+
+
+    ---------------------------------------------------------------------------
+
+    TypeError                                 Traceback (most recent call last)
+
+    <ipython-input-79-735a950c858e> in <module>()
+         10 urban_count_3 = urban.groupby(["Date"]).count()["Accident Index"]
+         11 
+    ---> 12 plt.title("Accident Severity and Average Casualty by City Type", size=20)
+         13 plt.ylabel("Average Severity", size=20)
+         14 plt.xlabel("Average Casualties", size=20)
+
+
+    TypeError: 'Text' object is not callable
+
