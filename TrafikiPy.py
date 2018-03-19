@@ -1,3 +1,4 @@
+
 # ----------------------------------------------------------------------
 # **Part 1: File Set Up**
 # ----------------------------------------------------------------------
@@ -9,21 +10,12 @@ import numpy as np
 import os
 import seaborn as sns
 import requests
-from datetime import datetime
 
-# define function to convert to hourly time 
-def to_hour(time):
-    try:
-        hour = datetime.strptime(str(time), '%H:%M')
-        return int(datetime.strftime(hour, '%H'))
-    except Exception:
-        return 0
+pd.set_option('display.max_columns', None)
 
 #============IMPORT==============
 csv_file_path = os.path.join('Resources', 'accidents_2014.csv')
 traffic_df = pd.read_csv(csv_file_path)
-
-pd.set_option('display.max_columns', None)
 
 #============DROP BLANK COLUMNS===========
 
@@ -95,11 +87,8 @@ traffic_df.rename(columns=
      'Year' : 'Year', 
     }, inplace=True)
 
-# format Date in Datetime format and add additional columns for month, day, and hour
+# format Date in Datetime format
 traffic_df['Date'] = pd.to_datetime(traffic_df['Date'], format='%d/%m/%y')
-traffic_df['Month'] = traffic_df['Date'].dt.month
-traffic_df['Day'] = traffic_df['Date'].dt.day
-traffic_df['Hour of Day'] = traffic_df['Time'].apply(to_hour)
 
 # display cleaned file
 traffic_df.head()
@@ -132,9 +121,15 @@ fiveColorPalette = sns.color_palette('hls', 5)
 five = sns.palplot(fiveColorPalette)
 plt.savefig('Images/fiveColorPalette.png')
 
+
 # create color palette with 3 colors (for data by severity)
 threeColorPalette = sns.color_palette('hls', 3)
 three = sns.palplot(threeColorPalette)
+
+# ----------------------------------------------------------------------
+# **Part X - Visualize Relationship between Severity/Casualties by City Type**
+# ----------------------------------------------------------------------
+=======
 plt.savefig('Images/threeColorPalette.png')
 
 # display color palettes
@@ -843,10 +838,19 @@ csv_data = pd.DataFrame({'Weather Conditions': weather_condition_number_list,
                         })
 csv_data.to_csv('Resources/regression.csv')
 
+# ----------------------------------------------------------------------
+# Part 6: Rural vs. Urban Data Visualization and Analysis
+# ----------------------------------------------------------------------
 
+# ----------------------------------------------------------------------
+# Part 6.1: Scatterplot of Average Casualty and Severity by City Type
+# ----------------------------------------------------------------------
+
+#--------------- Create Data Frames for Urban v. Rural --------------- 
 urban = traffic_df[traffic_df["Urban or Rural Area"] == 1]
 rural = traffic_df[traffic_df["Urban or Rural Area"] == 2]
 
+#--------------- Calculations by City Type --------------- 
 rural_mean_1 = rural.groupby(["Date"]).mean()["Accident Severity"]
 rural_mean_2 = rural.groupby(["Date"]).mean()["Number of Casualties"]
 rural_count_3 = rural.groupby(["Date"]).count()["Accident Index"]
@@ -855,27 +859,78 @@ urban_mean_1 = urban.groupby(["Date"]).mean()["Accident Severity"]
 urban_mean_2 = urban.groupby(["Date"]).mean()["Number of Casualties"]
 urban_count_3 = urban.groupby(["Date"]).count()["Accident Index"]
 
+#--------------- Set Parameters for Scatterplot --------------- 
 plt.rcParams["figure.figsize"] = [16,9]
+sns.set()
 
-plt.title("Accident Severity and Average Casualty by City Type", size=20)
+plt.title("Average Severity vs. Average Casualty by City Type", size=20)
 plt.ylabel("Average Severity", size=20)
 plt.xlabel("Average Casualties", size=20)
-
-sns.set()
+plt.ylim([3, 2.6])
 plt.scatter(rural_mean_2,
             rural_mean_1,
             color="#DACF68",
-            s=rural_count_3,
+            s=rural_count_3*2,
             edgecolor="black", linewidths= 0.1,
             alpha=0.8, label="Rural")
 
 plt.scatter(urban_mean_2,
             urban_mean_1,
             color="#8757D4",
-            s=urban_count_3,
+            s=urban_count_3*2,
             edgecolor="black", linewidths=0.1, marker="^", 
             alpha=0.8, label="Urban")
 
+#--------------- Set Legend --------------- 
 plt.legend(title='City Type', loc='center left', bbox_to_anchor=(1, 0.5), fontsize=15)
+
+#--------------- Save and Show --------------- 
 plt.savefig('Images/Severity and Casualty by City Type.png')
 plt.show()
+
+# ----------------------------------------------------------------------
+# Part 6.2: Scatterplot of Average Casualty and Severity by Police Force
+# ----------------------------------------------------------------------
+
+police_severity_urban = list(urban.groupby(["Police Force"]).mean()["Accident Severity"])
+police_casualty_urban = list(urban.groupby(["Police Force"]).count()["Number of Casualties"])
+police_force_urban = list(urban["Police Force"].unique())
+police_force_urban.sort()
+                             
+police_severity_rural = list(rural.groupby(["Police Force"]).mean()["Accident Severity"])
+police_casualty_rural = list(rural.groupby(["Police Force"]).count()["Number of Casualties"])
+police_force_rural = list(rural["Police Force"].unique())
+police_force_rural.sort()
+
+#--------------- Set Parameters for Scatterplot ---------------
+plt.rcParams["figure.figsize"] = [16,9]
+
+plt.title("Average Severity by Police Force and City Type", size=20)
+plt.ylabel("Average Severity", size=20)
+plt.xlabel("Police Force", size=20)
+plt.ylim([3, 2.6])
+
+plt.scatter(police_force_urban,
+            police_severity_urban, 
+            color="#8757D4",
+            s=police_casualty_urban,
+            edgecolor="black", linewidths= 0.1,
+            alpha=0.8, label="Urban")
+
+
+plt.scatter(police_force_rural,
+            police_severity_rural, 
+            color="#DACF68",
+            s=police_casualty_rural,
+            edgecolor="black", linewidths= 0.1,
+            alpha=0.8, label="Rural")
+
+#--------------- Set Legend --------------- 
+legend = plt.legend(title='City Type', loc='center left', bbox_to_anchor=(1, 0.5), fontsize=15)
+legend.legendHandles[0]._sizes = [300]
+legend.legendHandles[1]._sizes = [300]
+
+#--------------- Save and Show --------------- 
+plt.savefig('Images/Severity and Casualty by Police Force.png')
+plt.show()
+
