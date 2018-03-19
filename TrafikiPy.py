@@ -1,4 +1,5 @@
 
+
 # ----------------------------------------------------------------------
 # **Part 1: File Set Up**
 # ----------------------------------------------------------------------
@@ -19,6 +20,7 @@ pd.set_option('display.max_columns', None)
 
 
 
+
 # define function to convert to hourly time 
 def to_hour(time):
     try:
@@ -26,6 +28,7 @@ def to_hour(time):
         return int(datetime.strftime(hour, '%H'))
     except Exception:
         return 0
+
 
 
 #============IMPORT==============
@@ -37,7 +40,9 @@ traffic_df = pd.read_csv(csv_file_path)
 
 
 
+
 pd.set_option('display.max_columns', None)
+
 
 
 #============DROP BLANK COLUMNS===========
@@ -120,10 +125,12 @@ traffic_df['Hour of Day'] = traffic_df['Time'].apply(to_hour)
 traffic_df.head()
 
 
+
 '''
 To ensure that our report would have a cohesive look and feel, we
 established color palettes to use across all visualizations.
 '''
+
 
 
 # ----------------------------------------------------------------------
@@ -689,6 +696,7 @@ plt.scatter(severity_2_mean_1,
             alpha=0.75, label="Severity 2")
 
 
+
 plt.scatter(severity_3_mean_1,
             severity_3_mean_2,  
             color="#CC655B", 
@@ -702,6 +710,11 @@ plt.scatter(severity_3_mean_1,
 
 # # Weather and Severity Correlation 
 
+#Analysis: Comparing correlation between Severity and Weather Condition.
+#Process: Mapping out what type of weather resulted in the highest kind of severity
+#Information: 1 - Fatal | 2 - Serious | 3 - Slight |Highest means good and Lowest means bad.
+#Trend: Highest Severity was caused during a weather without high winds. | Lowest was during Snow and Fog weather
+
 grouper_1 = traffic_df[['Weather Conditions','Accident Severity']]
 weather_severity = grouper_1.groupby(by = 'Weather Conditions',as_index=False).sum()
 plt = sns.barplot(weather_severity['Accident Severity'],weather_severity['Weather Conditions'])
@@ -709,6 +722,13 @@ pl.savefig('Images/Weather and Severity Correlation.png')
 
 
 # # Severity and Weather Correlation
+
+
+
+#Analysis: Comparing correlation between Severity and Weather Condition.
+#Process: Cross referencing our previous findings by grouping the same data by Severity and seeing if the data is accurate.
+#Information: 1 - Fatal | 2 - Serious | 3 - Slight |Highest means good and Lowest means bad.
+#Trend: Lots of entries of severity 3 and less of severity of 1. 
 
 grouper_a = traffic_df[['Weather Conditions','Accident Severity']]
 weather_severity_1 = grouper_a.groupby(by = 'Accident Severity',as_index=False).count()
@@ -719,6 +739,11 @@ pl.savefig('Images/Severity and Weather Correlation.png')
 # # Light Condition and Severity Correlation
 
 
+
+#Analysis: Comparing correlation between Severity and Light Condition.
+#Process: Mapping out what type of weather resulted in the highest kind of severity.
+#Information: 1 - Fatal | 2 - Serious | 3 - Slight |Highest means good and Lowest means bad.
+#Trend: Highest Severity was caused during Daylight. | Lowest was during Darkness with dim street lights.
 grouper_2 = traffic_df[['Light Conditions','Accident Severity']]
 light_condition_severity = grouper_2.groupby(by = 'Light Conditions',as_index=False).sum()
 plt = sns.barplot(light_condition_severity['Accident Severity'],light_condition_severity['Light Conditions'])
@@ -728,6 +753,11 @@ pl.savefig('Images/Light Condition and Severity Correlation')
 # # Severity Condition and Light Condition
 
 
+
+#Analysis: Comparing correlation between Severity and Weather Condition.
+#Process: Cross referencing our previous findings by grouping the same data by Severity and seeing if the data is accurate.
+#Information: 1 - Fatal | 2 - Serious | 3 - Slight |Highest means good and Lowest means bad.
+#Trend: Lots of entries of severity 3 and less of severity of 1. 
 grouper_b = traffic_df[['Light Conditions','Accident Severity']]
 light_condition_severity_1 = grouper_b.groupby(by = 'Accident Severity',as_index=False).count()
 plt = sns.barplot(light_condition_severity_1['Accident Severity'],light_condition_severity_1['Light Conditions'])
@@ -737,6 +767,11 @@ pl.savefig('Images/Severity Condition and Light Condition')
 # # Road Type and Severity Correlation
 
 
+
+#Analysis: Comparing correlation between Severity and Road type.
+#Process: Mapping out what type of weather resulted in the highest kind of severity.
+#Information: 1 - Fatal | 2 - Serious | 3 - Slight |Highest means good and Lowest means bad.
+#Trend: Highest Severity was caused during Single Carriageway. | Lowest was during Darkness with slim road.
 grouper_3 = traffic_df[['Road Type','Accident Severity']]
 road_type_severity = grouper_3.groupby(by = 'Road Type',as_index=False).sum()
 plt = sns.barplot(road_type_severity['Accident Severity'],road_type_severity['Road Type'])
@@ -746,6 +781,11 @@ pl.savefig('Images/Road Type and Severity Correlation')
 # # Severity and Road Type Correlation
 
 
+
+#Analysis: Comparing correlation between Severity and Weather Condition.
+#Process: Cross referencing our previous findings by grouping the same data by Severity and seeing if the data is accurate.
+#Information: 1 - Fatal | 2 - Serious | 3 - Slight |Highest means good and Lowest means bad.
+#Trend: Lots of entries of severity 3 and less of severity of 1. 
 grouper_c = traffic_df[['Road Type','Accident Severity']]
 road_type_severity_1 = grouper_c.groupby(by = 'Accident Severity',as_index=False).count()
 plt = sns.barplot(road_type_severity_1['Accident Severity'],road_type_severity_1['Road Type'])
@@ -753,6 +793,11 @@ pl.savefig('Images/Severity and Road Type Correlation')
 
 
 # # Converting Weather Condition to Numbers 
+
+
+
+
+#process: converting weather string data to numbers to train the machine learning algorithm
 
 weather_condition_number_list = []
 
@@ -785,6 +830,11 @@ for condition in traffic_df['Weather Conditions']:
 
 # # Converting Road Type to Numbers
 
+
+
+
+#process: converting Road Type string data to numbers to train the machine learning algorithm
+
 road_type_number_list = []
 
 traffic_df['Road Type'].value_counts()
@@ -809,6 +859,11 @@ for road in traffic_df['Road Type']:
 
 # # Light Conditions to Numbers
 
+
+
+
+#process: converting Light Condition string data to numbers to train the machine learning algorithm
+
 light_condition_number_list = []
 
 for condition in traffic_df['Light Conditions']:
@@ -829,6 +884,11 @@ for condition in traffic_df['Light Conditions']:
         light_condition_number_list.append(1)
         
 
+
+
+
+#appending it into a data frame
+
 training_data = pd.DataFrame({'Weather':weather_condition_number_list,
                               'Road Type':road_type_number_list,
                               'Light Condition':light_condition_number_list                          
@@ -836,6 +896,9 @@ training_data = pd.DataFrame({'Weather':weather_condition_number_list,
 
 
 # # Test Data
+
+
+#process: using random function to generate test data for the prediction algorithm
 
 import random    
 
@@ -854,11 +917,14 @@ for i in range (54147):
 
 
 
+
     weather_testing.append(random.randrange(0,8,1))  
     road_testing.append(random.randrange(0,5,1))
     light_testing.append(random.randrange(0,5,1))  
 
 
+
+#process: appending it to a set of 3 to create test data
 test_data = []
 for i in range(54147):
     temp=[]
@@ -870,12 +936,20 @@ for i in range(54147):
 
 # # Training Algorithm
 
+
+
+#Creating a classifier|training the algorithm|Testing the algorithm
+
 X = training_data[['Weather','Road Type','Light Condition']]
 Y = traffic_df['Accident Severity']
 from sklearn.naive_bayes import GaussianNB
 clf = GaussianNB()
 clf.fit(X, Y)
 prediction = clf.predict(test_data)
+
+
+
+# # Test Labels
 
 
 
@@ -902,6 +976,8 @@ other_df.to_csv('Resources/other_file.csv')
 # # Test Labels
 
 
+
+#Process: Creating the test labels to measure the accuracy of the prediction model
 test_labels = []
 for i in range(0, len(traffic_df)):
     
@@ -936,9 +1012,9 @@ for i in range(0, len(traffic_df)):
 
 # # Accuracy
 
-# In[170]:
 
 
+# Using the sklearn accuracy score to measure the accuracy of the prediction model. 
 import numpy as np
 from sklearn.metrics import accuracy_score
 accuracy_score(test_labels[0:54147], prediction)
