@@ -654,54 +654,122 @@ plt.title('2014 Urban Traffic Accidents by Speed Limit')
 plt.savefig('Images/2014-urban-accidents-by-speedlimit.png')
 
 # ----------------------------------------------------------------------
-# Part 4: Charles insert explanation and add comments plez
+# Part 4: Rural vs. Urban Data Visualization and Analysis
 # ----------------------------------------------------------------------
 
-severity_1 = traffic_df[traffic_df["Accident Severity"] == 1]
-severity_2 = traffic_df[traffic_df["Accident Severity"] == 2]
-severity_3 = traffic_df[traffic_df["Accident Severity"] == 3]
+#--------------- Create Data Frames for Urban v. Rural --------------- 
+urban = traffic_df[traffic_df["Urban or Rural Area"] == 1]
+rural = traffic_df[traffic_df["Urban or Rural Area"] == 2]
 
-severity_1_mean_1 = severity_1.groupby(["Local Authority District"]).mean()["Number of Casualties"]
-severity_1_mean_2 = severity_1.groupby(["Local Authority District"]).sum()["Number of Casualties"]
-severity_1_count_2 = severity_1.groupby(["Local Authority District"]).count()["Accident Index"]
+#--------------- Calculations by City Type --------------- 
+rural_mean_1 = rural.groupby(["Date"]).mean()["Accident Severity"]
+rural_mean_2 = rural.groupby(["Date"]).mean()["Number of Casualties"]
+rural_count_3 = rural.groupby(["Date"]).count()["Accident Index"]
 
-severity_2_mean_1 = severity_2.groupby(["Local Authority District"]).mean()["Number of Casualties"]
-severity_2_mean_2 = severity_2.groupby(["Local Authority District"]).sum()["Number of Casualties"]
-severity_2_count_2 = severity_2.groupby(["Local Authority District"]).count()["Accident Index"]
+urban_mean_1 = urban.groupby(["Date"]).mean()["Accident Severity"]
+urban_mean_2 = urban.groupby(["Date"]).mean()["Number of Casualties"]
+urban_count_3 = urban.groupby(["Date"]).count()["Accident Index"]
 
-severity_3_mean_1 = severity_3.groupby(["Local Authority District"]).mean()["Number of Casualties"]
-severity_3_mean_2 = severity_3.groupby(["Local Authority District"]).sum()["Number of Casualties"]
-severity_3_count_2 = severity_3.groupby(["Local Authority District"]).count()["Accident Index"]
-
+#--------------- Set Parameters for Scatterplot --------------- 
+plt.rcParams["figure.figsize"] = [16,9]
 sns.set()
+
+plt.title("Average Severity vs. Average Casualty by City Type", size=20)
+plt.ylabel("Average Severity", size=20)
+plt.xlabel("Average Casualties", size=20)
+plt.ylim([3, 2.6])
+plt.scatter(rural_mean_2,
+            rural_mean_1,
+            color="#DACF68",
+            s=rural_count_3*2,
+            edgecolor="black", linewidths= 0.1,
+            alpha=0.8, label="Rural")
+
+plt.scatter(urban_mean_2,
+            urban_mean_1,
+            color="#8757D4",
+            s=urban_count_3*2,
+            edgecolor="black", linewidths=0.1, marker="^", 
+            alpha=0.8, label="Urban")
+
+#--------------- Set Legend --------------- 
+plt.legend(title='City Type', loc='center left', bbox_to_anchor=(1, 0.5), fontsize=15)
+
+#--------------- Save and Show --------------- 
+plt.savefig('Images/Severity and Casualty by City Type.png')
+plt.show()
+
+'''
+Observations
+
+1. Urban Accidents means throughout the year are typically closer to 3 and casualties are usually closer to 1.
+This is likely due to the fact that more "fender benders" occur, which are low-intensity low-casualty events.
+
+2. Rural accidents occur much less frequently than urban accidents (on an absolute basis).
+This makes it possible for high casualty, high severity accidents to influence the overall mean for the day,
+pushing them higher.
+
+3. "One is less likely to get into an accident in a rural setting, 
+but if an accident is to occur it is likely to be more severe."
+'''
+
+urban = traffic_df[traffic_df["Urban or Rural Area"] == 1]
+rural = traffic_df[traffic_df["Urban or Rural Area"] == 2]
+
+police_severity_urban = list(urban.groupby(["Police Force"]).mean()["Accident Severity"])
+police_casualty_urban = list(urban.groupby(["Police Force"]).count()["Number of Casualties"])
+police_force_urban = list(urban["Police Force"].unique())
+police_force_urban.sort()
+                             
+police_severity_rural = list(rural.groupby(["Police Force"]).mean()["Accident Severity"])
+police_casualty_rural = list(rural.groupby(["Police Force"]).count()["Number of Casualties"])
+police_force_rural = list(rural["Police Force"].unique())
+police_force_rural.sort()
+
+#--------------- Set Parameters for Scatterplot ---------------
 plt.rcParams["figure.figsize"] = [16,9]
 
-plt.ylim([0,500])
-plt.xlim([1,5])
-plt.title("Latitude vs. Max Casualties", size=20)
-plt.ylabel("Number of Casualties in Authority District", size=20)
-plt.xlabel("Average Causalties in Authority District", size=20)
+plt.title("Average Severity by Police Force and City Type", size=20)
+plt.ylabel("Average Severity", size=20)
+plt.xlabel("Police Force", size=20)
+plt.ylim([3, 2.6])
 
-
-plt.scatter(severity_1_mean_1,
-            severity_1_mean_2, 
-            color="#5D56D3", 
+plt.scatter(police_force_urban,
+            police_severity_urban, 
+            color="#8757D4",
+            s=police_casualty_urban,
             edgecolor="black", linewidths= 0.1,
-            alpha=0.75, label="Severity 1")
+            alpha=0.8, label="Urban")
 
-plt.scatter(severity_2_mean_1,
-            severity_2_mean_2,  
-            color="#7CD96E",
+
+plt.scatter(police_force_rural,
+            police_severity_rural, 
+            color="#DACF68",
+            s=police_casualty_rural,
             edgecolor="black", linewidths= 0.1,
-            alpha=0.75, label="Severity 2")
+            alpha=0.8, label="Rural")
 
+#--------------- Set Legend --------------- 
+legend = plt.legend(title='City Type', loc='center left', bbox_to_anchor=(1, 0.5), fontsize=15)
+legend.legendHandles[0]._sizes = [300]
+legend.legendHandles[1]._sizes = [300]
 
+#--------------- Save and Show --------------- 
+plt.savefig('Images/Severity and Casualty by Police Force.png')
+plt.show()
 
-plt.scatter(severity_3_mean_1,
-            severity_3_mean_2,  
-            color="#CC655B", 
-            edgecolor="black", linewidths= 0.1,
-            alpha=0.75, label="Severity 3")
+'''
+Observations
+
+1. A similar pattern emerges when looking at the data through average severity and rate of casualty 
+continues to be higher in rural settings than urban settings.
+
+2. There does not appear to be a strong correlation between average severity/casualties 
+compared to Police Force.
+
+3. It is evident that some Police Forces encounter far less accidents. Typically, these have a
+higher tendency of demonstrating a higher average severity/casualty rate.
+'''
 
 
 # ----------------------------------------------------------------------
