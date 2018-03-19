@@ -1,7 +1,7 @@
 
 # coding: utf-8
 
-# In[150]:
+# In[26]:
 
 
 # ----------------------------------------------------------------------
@@ -19,7 +19,7 @@ import requests
 pd.set_option('display.max_columns', None)
 
 
-# In[151]:
+# In[27]:
 
 
 #============IMPORT==============
@@ -27,7 +27,7 @@ csv_file_path = os.path.join('Resources', 'accidents_2014.csv')
 traffic_df = pd.read_csv(csv_file_path)
 
 
-# In[152]:
+# In[28]:
 
 
 #============DROP BLANK COLUMNS===========
@@ -107,7 +107,7 @@ traffic_df['Date'] = pd.to_datetime(traffic_df['Date'], format='%d/%m/%y')
 traffic_df.head()
 
 
-# In[153]:
+# In[29]:
 
 
 # ----------------------------------------------------------------------
@@ -138,8 +138,13 @@ twelve
 
 # # Weather and Severity Correlation 
 
-# In[154]:
+# In[30]:
 
+
+#Analysis: Comparing correlation between Severity and Weather Condition.
+#Process: Mapping out what type of weather resulted in the highest kind of severity
+#Information: 1 - Fatal | 2 - Serious | 3 - Slight |Highest means good and Lowest means bad.
+#Trend: Highest Severity was caused during a weather without high winds. | Lowest was during Snow and Fog weather
 
 grouper_1 = traffic_df[['Weather Conditions','Accident Severity']]
 weather_severity = grouper_1.groupby(by = 'Weather Conditions',as_index=False).sum()
@@ -149,8 +154,13 @@ pl.savefig('Images/Weather and Severity Correlation.png')
 
 # # Severity and Weather Correlation
 
-# In[155]:
+# In[31]:
 
+
+#Analysis: Comparing correlation between Severity and Weather Condition.
+#Process: Cross referencing our previous findings by grouping the same data by Severity and seeing if the data is accurate.
+#Information: 1 - Fatal | 2 - Serious | 3 - Slight |Highest means good and Lowest means bad.
+#Trend: Lots of entries of severity 3 and less of severity of 1. 
 
 grouper_a = traffic_df[['Weather Conditions','Accident Severity']]
 weather_severity_1 = grouper_a.groupby(by = 'Accident Severity',as_index=False).count()
@@ -160,9 +170,13 @@ pl.savefig('Images/Severity and Weather Correlation.png')
 
 # # Light Condition and Severity Correlation
 
-# In[156]:
+# In[32]:
 
 
+#Analysis: Comparing correlation between Severity and Light Condition.
+#Process: Mapping out what type of weather resulted in the highest kind of severity.
+#Information: 1 - Fatal | 2 - Serious | 3 - Slight |Highest means good and Lowest means bad.
+#Trend: Highest Severity was caused during Daylight. | Lowest was during Darkness with dim street lights.
 grouper_2 = traffic_df[['Light Conditions','Accident Severity']]
 light_condition_severity = grouper_2.groupby(by = 'Light Conditions',as_index=False).sum()
 plt = sns.barplot(light_condition_severity['Accident Severity'],light_condition_severity['Light Conditions'])
@@ -171,9 +185,13 @@ pl.savefig('Images/Light Condition and Severity Correlation')
 
 # # Severity Condition and Light Condition
 
-# In[157]:
+# In[33]:
 
 
+#Analysis: Comparing correlation between Severity and Weather Condition.
+#Process: Cross referencing our previous findings by grouping the same data by Severity and seeing if the data is accurate.
+#Information: 1 - Fatal | 2 - Serious | 3 - Slight |Highest means good and Lowest means bad.
+#Trend: Lots of entries of severity 3 and less of severity of 1. 
 grouper_b = traffic_df[['Light Conditions','Accident Severity']]
 light_condition_severity_1 = grouper_b.groupby(by = 'Accident Severity',as_index=False).count()
 plt = sns.barplot(light_condition_severity_1['Accident Severity'],light_condition_severity_1['Light Conditions'])
@@ -182,9 +200,13 @@ pl.savefig('Images/Severity Condition and Light Condition')
 
 # # Road Type and Severity Correlation
 
-# In[158]:
+# In[34]:
 
 
+#Analysis: Comparing correlation between Severity and Road type.
+#Process: Mapping out what type of weather resulted in the highest kind of severity.
+#Information: 1 - Fatal | 2 - Serious | 3 - Slight |Highest means good and Lowest means bad.
+#Trend: Highest Severity was caused during Single Carriageway. | Lowest was during Darkness with slim road.
 grouper_3 = traffic_df[['Road Type','Accident Severity']]
 road_type_severity = grouper_3.groupby(by = 'Road Type',as_index=False).sum()
 plt = sns.barplot(road_type_severity['Accident Severity'],road_type_severity['Road Type'])
@@ -193,9 +215,13 @@ pl.savefig('Images/Road Type and Severity Correlation')
 
 # # Severity and Road Type Correlation
 
-# In[159]:
+# In[35]:
 
 
+#Analysis: Comparing correlation between Severity and Weather Condition.
+#Process: Cross referencing our previous findings by grouping the same data by Severity and seeing if the data is accurate.
+#Information: 1 - Fatal | 2 - Serious | 3 - Slight |Highest means good and Lowest means bad.
+#Trend: Lots of entries of severity 3 and less of severity of 1. 
 grouper_c = traffic_df[['Road Type','Accident Severity']]
 road_type_severity_1 = grouper_c.groupby(by = 'Accident Severity',as_index=False).count()
 plt = sns.barplot(road_type_severity_1['Accident Severity'],road_type_severity_1['Road Type'])
@@ -204,9 +230,10 @@ pl.savefig('Images/Severity and Road Type Correlation')
 
 # # Converting Weather Condition to Numbers 
 
-# In[160]:
+# In[36]:
 
 
+#process: converting weather string data to numbers to train the machine learning algorithm
 weather_condition_number_list = []
 
 for condition in traffic_df['Weather Conditions']:
@@ -238,9 +265,10 @@ for condition in traffic_df['Weather Conditions']:
 
 # # Converting Road Type to Numbers
 
-# In[161]:
+# In[37]:
 
 
+#process: converting Road Type string data to numbers to train the machine learning algorithm
 road_type_number_list = []
 
 traffic_df['Road Type'].value_counts()
@@ -265,9 +293,10 @@ for road in traffic_df['Road Type']:
 
 # # Light Conditions to Numbers
 
-# In[162]:
+# In[38]:
 
 
+#process: converting Light Condition string data to numbers to train the machine learning algorithm
 light_condition_number_list = []
 
 for condition in traffic_df['Light Conditions']:
@@ -289,9 +318,10 @@ for condition in traffic_df['Light Conditions']:
         
 
 
-# In[163]:
+# In[39]:
 
 
+#appending it into a data frame
 training_data = pd.DataFrame({'Weather':weather_condition_number_list,
                               'Road Type':road_type_number_list,
                               'Light Condition':light_condition_number_list                          
@@ -300,9 +330,10 @@ training_data = pd.DataFrame({'Weather':weather_condition_number_list,
 
 # # Test Data
 
-# In[164]:
+# In[40]:
 
 
+#process: using random function to generate test data for the prediction algorithm
 import random    
 
 weather_testing = []
@@ -317,9 +348,10 @@ for i in range (54147):
      
 
 
-# In[165]:
+# In[41]:
 
 
+#process: appending it to a set of 3 to create test data
 test_data = []
 for i in range(54147):
     temp=[]
@@ -331,9 +363,10 @@ for i in range(54147):
 
 # # Training Algorithm
 
-# In[166]:
+# In[42]:
 
 
+#Creating a classifier|training the algorithm|Testing the algorithm
 X = training_data[['Weather','Road Type','Light Condition']]
 Y = traffic_df['Accident Severity']
 from sklearn.naive_bayes import GaussianNB
@@ -342,35 +375,12 @@ clf.fit(X, Y)
 prediction = clf.predict(test_data)
 
 
-# # Exporting the CSV
-
-# In[167]:
-
-
-csv_data = pd.DataFrame({'Weather Conditions': weather_condition_number_list, 
-                         'Road Type': road_type_number_list,
-                         'Light Condition': light_condition_number_list,
-                         'Severity': traffic_df['Accident Severity']
-                        })
-csv_data.to_csv('Resources/regression.csv')
-csv_data.head()
-
-
-# In[168]:
-
-
-other_df = pd.DataFrame({'Weather Conditions': traffic_df['Weather Conditions'], 
-                         'Road Type': traffic_df['Road Type'],
-                         'Light Condition': traffic_df['Light Conditions'],
-                         'Severity': traffic_df['Accident Severity']})
-other_df.to_csv('Resources/other_file.csv')
-
-
 # # Test Labels
 
-# In[169]:
+# In[43]:
 
 
+#Process: Creating the test labels to measure the accuracy of the prediction model
 test_labels = []
 for i in range(0, len(traffic_df)):
     
@@ -405,9 +415,10 @@ for i in range(0, len(traffic_df)):
 
 # # Accuracy
 
-# In[170]:
+# In[44]:
 
 
+# Using the sklearn accuracy score to measure the accuracy of the prediction model. 
 import numpy as np
 from sklearn.metrics import accuracy_score
 accuracy_score(test_labels[0:54147], prediction)
